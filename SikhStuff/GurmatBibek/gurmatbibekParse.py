@@ -52,7 +52,8 @@ def askTopicsorNames():
         if 'y' in again:
             continue
         else:
-            return "Bye!! Vaheguru JIO"
+            print("Bye!! Vaheguru JIO")
+            return "Vaheguru"
 
 def gursikh():
     theperson=input("What is the name of the Gursikh?: ")
@@ -67,8 +68,13 @@ def gursikh():
         print("You input was invalid.")
         again=input('Would you like to try again? ("Y" or "N"): ')
         return again
-    num=int(input("Put the number corresponding to the person you are looking for: "))
-    name= options[num-1]
+    try:
+        num=int(input("Put the number corresponding to the person you are looking for: "))
+        name= options[num-1]
+    except:
+        print("You input was invalid.")
+        again=input('Would you like to try again? ("Y" or "N"): ')
+        return again
     return name
 
 def topic():
@@ -91,14 +97,20 @@ def chosetitle(titles):
     links=[titles[i] for i in range(len(titles)) if i%2==1]
     for i in range(len(links)):
         print(f'{i+1}) {title[i]}')
-    num=int(input("Put the number corresponding to the topic you are looking for: "))
-    whattodowithLink=input("Would you like to 'open', 'copy' or do 'nothing'? : ")
-    if 'no' in whattodowithLink:
+    try:
+        num=int(input("Put the number corresponding to the topic you are looking for: "))
+        theLink=links[num-1]
+        whattodowithLink=input("Would you like to 'open', 'copy' or do 'nothing'? : ")
+        if 'no' in whattodowithLink:
+            return None
+        if 'cop' in whattodowithLink:
+            pyperclip.copy(theLink)
+        else:
+            br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')
+            br.get(theLink)
+    except:
+        print("Your input was invalid. :(")
         return None
-    if 'cop' in whattodowithLink:
-        pyperclip.copy(links[num-1])
-    else:
-        br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')
-        br.get(links[num-1])
+
 
 askTopicsorNames()
