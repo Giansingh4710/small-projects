@@ -6,7 +6,7 @@ options = webdriver.ChromeOptions()
 options.headless = True
 options.add_argument("--headless")
 options.add_argument={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"}#my user agent
-br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
+br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')#,options=options)
 
 
 peopleUrl=[] #all urls for keertan pages of people. Not in function because we loop over getKeetani Func
@@ -48,24 +48,23 @@ def getShabads(url):
     pluses=br.find_elements_by_class_name("fa-plus")
     for plus in pluses:
         plus.click()
-        time.sleep(0.1) 
+        time.sleep(0.5)  #All this code above in this func is to open all the '+' buttons on the akj website so I can scrape the shabads
     atags=br.find_elements_by_tag_name("a")
     for atag in atags:
         link=atag.get_attribute("href")
         if link!=None:
-            if 'Keertan' in link and "akj" in link and "mp3" in link:
+            if 'Keertan' in link and "akj" in link and "mp3" in link:  #there are alot of href links on the site so this basiclly only adds the keertan file and not the other links
                 keertanTracks.append(link)
-    nextPageUl=br.find_elements_by_class_name("setPaginate")
-    if len(nextPageUl)>0:
+    nextPageUl=br.find_elements_by_class_name("setPaginate") #on the buttom of the page, if the keetani has more than 1 page of keertan, this will be there
+    if len(nextPageUl)>0: 
         li=nextPageUl[0].find_elements_by_tag_name("li")
-        actualPages=li[2:-2]
+        actualPages=li[2:-2] #so basically the buttom page switcher is a ul tag. The first li tag is to let you know what page your are on like "Page 2 of 4". The last two li tags are "Next" and "Last" buttons
         theLinks=[i.find_element_by_tag_name("a").get_attribute("href") for i in actualPages] #get all the links for the differt pages of the keertani if they have more than 1
         for i in theLinks:
-            if None not in theLinks:
-                getShabads(i)
-                print(theLinks.index(i),end=" ")
-                print("Done!!!!!")
+            if None not in theLinks:  #When you are on like page "2 of 5", the second li tag will have no href since you are in that link rn so it will give none. This way in the next itteration when you recurse, it wont keep recusing again becaue there will be a none in the list. This way it will only recurse once for each page
+                getShabads(i) 
     print(len(keertanTracks))
+
 
 def downloadShabads(tracks):
     c=0
@@ -75,17 +74,17 @@ def downloadShabads(tracks):
         urllib.request.urlretrieve(i,f"D:\\{c}){title[31:]}")
         print(i)
 
-'''
+
 allpeople=['bhai jaswant',"nirmal","sant"]
 for i in allpeople:
     getKeertani(i)  #the getKeertan func puts the url of the person in list-peopleUrl
 
 for i in peopleUrl:
     getShabads(i) #the getShabads func gets all the shabds from a person and puts them in list- keertanTracks
-'''
 
-getShabads("https://www.akj.org/keertan.php?cnt=10&loc=&yr=&mn=&keert=Bhai+Jagpal+Singh+Jee+%28Kanpur%29&search_keertan=Search+Keertan")
-#downloadShabads(getShabads(peopleUrl))
+downloadShabads(keertanTracks)
+
+#getShabads("https://www.akj.org/keertan.php?cnt=10&loc=&yr=&mn=&keert=Bibi+Sant+Kaur+Jee+%28Amritsar%29&search_keertan=Search+Keertan")
 
 
 
