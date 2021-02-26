@@ -9,7 +9,7 @@ options.add_argument={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) Ap
 br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
 
 
-allUrls=[] #all urls for keertan pages of people. Not in function because we loop over getKeetani Func
+peopleUrl=[] #all urls for keertan pages of people. Not in function because we loop over getKeetani Func
 def getKeertani(keertani):
     akj="https://www.akj.org/keertan.php"
     br.get(akj)
@@ -40,24 +40,32 @@ def getKeertani(keertani):
             theKeertani=theKeertani[:-1]
             dropDown.send_keys(theKeertani)
     br.find_element_by_css_selector("body > div.container > form > div > div > div > div.col-md-12.text-center.keer-top-but > input").click() #click search button
-    allUrls.append(br.current_url)
+    peopleUrl.append(br.current_url)
 
-def getShabads(urls):
-    keertanTracks=[]
-    for i in urls:
-        br.get(i)
-        pluses=br.find_elements_by_class_name("fa-plus")
-        for plus in pluses:
-            plus.click()
-            time.sleep(0.5) 
-        atags=br.find_elements_by_tag_name("a")
-        for atag in atags:
-            link=atag.get_attribute("href")
-            if link!=None:
-                if 'Keertan' in link and "akj" in link and "mp3" in link:
-                    keertanTracks.append(link)
-        print(len(keertanTracks))
-    return keertanTracks
+keertanTracks=[]
+def getShabads(url):
+    br.get(url)
+    pluses=br.find_elements_by_class_name("fa-plus")
+    for plus in pluses:
+        plus.click()
+        time.sleep(0.1) 
+    atags=br.find_elements_by_tag_name("a")
+    for atag in atags:
+        link=atag.get_attribute("href")
+        if link!=None:
+            if 'Keertan' in link and "akj" in link and "mp3" in link:
+                keertanTracks.append(link)
+    nextPageUl=br.find_elements_by_class_name("setPaginate")
+    if len(nextPageUl)>0:
+        li=nextPageUl[0].find_elements_by_tag_name("li")
+        actualPages=li[2:-2]
+        theLinks=[i.find_element_by_tag_name("a").get_attribute("href") for i in actualPages] #get all the links for the differt pages of the keertani if they have more than 1
+        for i in theLinks:
+            if None not in theLinks:
+                getShabads(i)
+                print(theLinks.index(i),end=" ")
+                print("Done!!!!!")
+    print(len(keertanTracks))
 
 def downloadShabads(tracks):
     c=0
@@ -67,12 +75,19 @@ def downloadShabads(tracks):
         urllib.request.urlretrieve(i,f"D:\\{c}){title[31:]}")
         print(i)
 
-
-allpeople=['bhai jaswant',"nirmal","Bhagat"]
+'''
+allpeople=['bhai jaswant',"nirmal","sant"]
 for i in allpeople:
-    getKeertani(i)
+    getKeertani(i)  #the getKeertan func puts the url of the person in list-peopleUrl
 
-downloadShabads(getShabads(allUrls))
+for i in peopleUrl:
+    getShabads(i) #the getShabads func gets all the shabds from a person and puts them in list- keertanTracks
+'''
+
+getShabads("https://www.akj.org/keertan.php?cnt=10&loc=&yr=&mn=&keert=Bhai+Jagpal+Singh+Jee+%28Kanpur%29&search_keertan=Search+Keertan")
+#downloadShabads(getShabads(peopleUrl))
+
+
 
 
 
