@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import Select
 br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')#,options=options)
 
 
-allUrls=[]
+allUrls=[] #all urls for keertan pages of people
 def getKeertani(keertani):
     akj="https://www.akj.org/keertan.php"
     br.get(akj)
@@ -21,8 +21,14 @@ def getKeertani(keertani):
     print(optLst)
     for i in range(len(optLst)):
         print(f'{i+1}) {optLst[i]}')
-    ind=int(input("Type the number for the keertani you want: "))-1
-    theKeertani=optLst[ind]
+    if len(optLst)==0:
+        print("invalid input. :(")
+        return None
+    elif len(optLst)==1:
+        theKeertani=optLst[0]
+    else:
+        ind=int(input("Type the number for the keertani you want: "))-1
+        theKeertani=optLst[ind]
     print(theKeertani)
     dropDown.send_keys(theKeertani) #type the exact keetani in the "search keertani"
     while True:
@@ -34,11 +40,10 @@ def getKeertani(keertani):
             theKeertani=theKeertani[:-1]
             dropDown.send_keys(theKeertani)
     br.find_element_by_css_selector("body > div.container > form > div > div > div > div.col-md-12.text-center.keer-top-but > input").click() #click search button
-    print(br.current_url)
     allUrls.append(br.current_url)
-        #br.get_screenshot_as_file("screenshot.png")
 
-allpeople=['bhai jaswant',"nirmal","gian"]
+
+allpeople=['bhai jaswant',"nirmal","giaan"]
 for i in allpeople:
     getKeertani(i)
 print(allUrls)
