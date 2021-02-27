@@ -5,7 +5,7 @@ options = webdriver.ChromeOptions()
 options.headless = True
 options.add_argument("--headless")
 options.add_argument={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"}#my user agent
-#br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')#,options=options)
+br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
 
 
 peopleUrl=[] #all urls for keertan pages of people. Not in function because we loop over getKeetani Func
@@ -66,12 +66,12 @@ def getShabads(url):
 
 
 def downloadShabads(tracks):
-    c=32
+    c=0
     for i in tracks:
         try:
             c+=1
             b=i.split('/')
-            title=b[-1][:-1]
+            title=b[-1][:-1]+"3"
             title=f"{c}) {title}"
             urllib.request.urlretrieve(i,f"D:\\Keertan\\{title}")
             print(title)
@@ -79,21 +79,14 @@ def downloadShabads(tracks):
             print("Number "+str(c)+"did not work")
             c-=1
 
-f=open("C:\\Users\\gians\\Desktop\\stuff\\AKJKeertan.txt","r")
-tracks=f.readlines()
-tracks=tracks[32:]
-downloadShabads(tracks)
-f.close()
-#allpeople=['bhai jaswant singh (Toronto)',"nirmalbir","bibi sant kaur (Am"]
-#for i in allpeople:
-#    getKeertani(i)  #the getKeertan func puts the url of the person in list-peopleUrl
+allpeople=['bhai jaswant singh (Toronto)',"nirmalbir","Bhai Sukhpal Singh Jee (Mallian)","bibi sant kaur (Am","bhai gurinder Singh Jee (CA)","Bibi paramjeet Kaur Jee (jammu)","Bhai Jasbir Singh Jee (To"]
+for i in allpeople:
+    getKeertani(i)  #the getKeertan func puts the url of the person in list-peopleUrl
 
-#for i in peopleUrl:
-#    getShabads(i) #the getShabads func gets all the shabds from a person and puts them in list- keertanTracks
+for i in peopleUrl:
+    getShabads(i) #the getShabads func gets all the shabds from a person and puts them in list- keertanTracks
 
-#with open("C:\\Users\\gians\\Desktop\\stuff\\AKJKeertan.txt","w") as f:
-#    for i in keertanTracks:
-#        f.write(i+"\n")
+downloadShabads(keertanTracks)
 
 
 #getShabads("https://www.akj.org/keertan.php?cnt=10&loc=&yr=&mn=&keert=Bibi+Sant+Kaur+Jee+%28Amritsar%29&search_keertan=Search+Keertan")
