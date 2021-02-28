@@ -21,6 +21,31 @@ def getAudios():
             if "pdf" not in href:
                 if "Book" in href or "book" in href:
                     audioBooks.append(href)
-    print(len(audioBooks))
     return audioBooks 
-getAudios()
+def downloadBooks(linksofBooks):
+    failCounter=0
+    for i in linksofBooks:
+        res=requests.get(i)
+        soup=bs(res.text, 'lxml')
+        theCointaner=soup.find("div",class_="krtn_listing")
+        theCointaner=theCointaner.find("tbody")
+        chapters=theCointaner.find_all("tr")
+        counter=0
+        for chapter in chapters:
+            href=chapter.find("a").get("href")
+            mp3="https://www.akj.org/"+href
+            counter+=1
+            title=f"{counter}) {chapter.text}.mp3"
+            title=title.replace(" ","#")
+            try:
+                urllib.request.urlretrieve(mp3,f"D:\\Books\\{title}")
+                print(f"{title} ) {mp3}")
+            except:
+                failCounter+=1
+                print(f"Failed - {title}")
+    print(f"Total chapters failed: {failCounter}")
+            
+        
+booklinks=getAudios()
+downloadBooks(booklinks)
+    
