@@ -21,13 +21,14 @@ def getAudios():
             href="https://www.akj.org/"+atag["href"]
             if "pdf" not in href:
                 title=i.find("b").text
+                title=title.replace(" ","#")
                 if "Book" in href or "book" in href:
                     audioBooks[href]=title
     return audioBooks 
 def downloadBooks(linksofBooks):
     failCounter=0
     for i in linksofBooks:
-        os.mkdir(f"D:\\{linksofBooks[i]}")
+        os.mkdir(f"D:\\Books\\{linksofBooks[i]}")
         res=requests.get(i)
         soup=bs(res.text, 'lxml')
         theCointaner=soup.find("div",class_="krtn_listing")
@@ -41,7 +42,7 @@ def downloadBooks(linksofBooks):
             title=f"{counter}) {chapter.text}.mp3"
             title=title.replace(" ","#")
             try:
-                urllib.request.urlretrieve(mp3,f"D:\\{linksofBooks[i]}\\{title}")
+                urllib.request.urlretrieve(mp3,f"D:\\Books\\{linksofBooks[i]}\\{title}")
                 print(f"{title} ) {mp3}")
             except:
                 failCounter+=1
