@@ -1,6 +1,6 @@
 import pyperclip
 from selenium import webdriver
-with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibek.txt",'r') as fl: #I took all the links from the fourms and put them into this file. To view 
+with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekfourm.txt",'r') as fl: #I took all the links from the fourms and put them into this file. To view 
     lines=fl.readlines()
 d={}
 topics=[]
