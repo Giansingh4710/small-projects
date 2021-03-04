@@ -1,16 +1,16 @@
-import pyperclip
+import pyperclip, time
 from selenium import webdriver
 with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekfourm.txt",'r') as fl: #I took all the links from the fourms and put them into this file. To view 
     lines=fl.readlines()
 d={}
 topics=[]
-for line in lines:
+for line in lines:  #for the fourm
     try:
         line=line[3:]
         line=line.strip()
         lst=line.split(':')
         name=lst[0].strip().lower()
-        title=lst[1][:-6].strip()
+        title=lst[1][:-6].strip().lower()
         link="http:"+lst[2]
         topics.append(title)
         topics.append(link)
@@ -21,6 +21,12 @@ for line in lines:
             d[name].append(link)
     except IndexError:
         continue
+with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekArticles.txt",'r') as filee: #I took all the links from the fourms and put them into this file. To view 
+    TheLines=filee.readlines()
+for line in TheLines:
+    line=line.split(" : ")
+    topics.append(line[0].lower()) #the title
+    topics.append(line[1][:-1]) #the link
 
 def askTopicsorNames():
     while True:
@@ -43,7 +49,8 @@ def askTopicsorNames():
                 break
         chosetitle(titles)
         while True:
-            sametopics=input("Would you like to see the topic list again?: ('Y' or 'N') ")
+            time.sleep(3)
+            sametopics=input("Would you like to see the same topic list again ('Y' or 'N')?: ")
             if 'y' in sametopics.lower():
                 chosetitle(titles)
             else:
