@@ -1,5 +1,5 @@
-import pyperclip, time
-from selenium import webdriver
+import pyperclip, time, random,webbrowser
+
 with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekfourm.txt",'r') as fl: #I took all the links from the fourms and put them into this file. To view 
     lines=fl.readlines()
 d={}
@@ -85,9 +85,15 @@ def gursikh():
     return name
 
 def topic():
-    topicc=input("What is the name of the topic?: ")
+    topicc=input("What is the name of the topic(type 'random' or '' to get random topics)?: ")
     allTopics=[topics[i] for i in range(len(topics)) if i%2==0]
-    options=[i for i in allTopics if topicc in i] #looks at all titles and select the one that include the topicc string
+    if topicc=="random" or topicc=="" or topicc==" ":
+        options=[]
+        for i in range(10):
+            num=random.randint(0,len(allTopics)-1)
+            options.append(allTopics[num])
+    else:
+        options=[i for i in allTopics if topicc in i] #looks at all titles and select the one that include the topicc string
     if len(options)==0:
         print("You input was invalid.")
         again=input('Would you like to try again? ("Y" or "N"): ')
@@ -113,8 +119,8 @@ def chosetitle(titles):
         if 'cop' in whattodowithLink:
             pyperclip.copy(theLink)
         else:
-            br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')
-            br.get(theLink)
+            #br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')
+            webbrowser.open(theLink)
     except:
         print("Your input was invalid. :(")
         return None

@@ -66,20 +66,20 @@ def getShabads(url):
 
 
 def downloadShabads(tracks):
-    c=0
+    c=66
     for i in tracks:
         try:
             c+=1
             b=i.split('/')
             title=b[-1][:-1]+"3"
             title=f"{c}) {title}"
-            urllib.request.urlretrieve(i,f"D:\\Keertan\\{title}")
+            urllib.request.urlretrieve(i,f"D:\\2)Keertan\\{title}")
             print(title)
         except:
             print("Number "+str(c)+"did not work")
             c-=1
 
-allpeople=['bhai jaswant singh (Toronto)',"nirmalbir","Bhai Sukhpal Singh Jee (Mallian)","bibi sant kaur (Am","bhai gurinder Singh Jee (CA)","Bibi paramjeet Kaur Jee (jammu)","Bhai Jasbir Singh Jee (To"]
+allpeople=["Bibi paramjeet Kaur Jee (jammu)","Bhai Jasbir Singh Jee (To"]
 for i in allpeople:
     getKeertani(i)  #the getKeertan func puts the url of the person in list-peopleUrl
 
