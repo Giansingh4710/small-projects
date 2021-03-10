@@ -11,13 +11,14 @@ def getHTML():
         views=lst[0];
         date=lst[1];
         link=lst[2];
-        newKhata="<tr>"+"<td>"+title+"</td>"+"<td>"+"<a href=\'"+link[0:-1]+"\' target='_blank'>"+link+"</a>"+" </td>"+"<td>"+date+"</td>"+"</tr>";
+        newKhata="<li>"+"<a href=\'"+link[0:-1]+"\' target='_blank'>"+title+"</a>"+" </li>";
+        print(f"{title}: {views} , {date}")
         allKhatas+=newKhata
     return allKhatas
 html=f'''<html>
   <head>
     <style>
-      body[
+      body, a[
         background-color:#001F3E;
         color:white;         
       ]
@@ -45,15 +46,11 @@ html=f'''<html>
   </head>
   <body>
     <div>
-    <h2>Giani Gurwinder Singh Ji Nangli</h2>
     <h1 class="avatar" id="pic"><img src="GianiJi.jpg" alt="Giani gurwinder Singh Ji Nangli" />Giani gurwinder Singh Ji Nangl</h1>
     <table id="khata">
-      <tr>
-        <th id="column">TITLE</th>
-        <th id="column">LINK</th>
-        <th id="column">DATE</th>
-      </tr>
+      <ol>
       {getHTML()}
+      </ol>
     </table>
     </div>
     <script type="text/javascript" src="script.js" async></script>

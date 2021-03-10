@@ -1,25 +1,30 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup as bs
 import time
 
 options = webdriver.ChromeOptions()
 options.headless = True
-br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
+br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')#options=options)
 url="https://www.youtube.com/c/ShriSarblohBungaNangali/videos"
 
 def getLinksNTitles(urll):
     br.get(urll)
+    html = br.find_element_by_tag_name('html')
+    for i in range(100):
+        html.send_keys(Keys.END) #scroll to end of page
     content=br.page_source.encode('utf-8').strip()
     soup=bs(content,"lxml")
-    vids=soup.findAll("a",id="video-title")
+    vids=soup.findAll("a",id="video-title") #all videos
     span=soup.findAll("span",class_="style-scope ytd-grid-video-renderer")
     videosViews=[]
     d={}
-    hrefs=["https://www.youtube.com"+i.get("href") for i in vids]
+    print(len(vids))
+    hrefs=["https://www.youtube.com"+i.get("href") for i in vids] #hrefs from the videos
     for i in range(0,len(span),2):
         viewsNhowLongAgo=[] # a list of size 2 where index 0 in the views and index 1 is how long ago
-        viewsNhowLongAgo.append(span[i].text)
-        viewsNhowLongAgo.append(span[i+1].text)
+        viewsNhowLongAgo.append(span[i].text) #span[i].text is views
+        viewsNhowLongAgo.append(span[i+1].text) #THIS IS how long ago video made like ' 2 months ago'
         videosViews.append(viewsNhowLongAgo)
     for i in range(len(vids)):
         title=vids[i].text
@@ -50,7 +55,7 @@ def writeInFile(dictt):
     time.sleep(20)
     filee.close()
 dictt=getLinksNTitles(url)
-#writeInFile(dictt)
+writeInFile(dictt)
 
 
 
