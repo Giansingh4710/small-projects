@@ -1,9 +1,10 @@
 import urllib.request
 from bs4 import BeautifulSoup as bs 
 import requests
-import time
+from datetime import datetime as dt
 
-StupidLongVariablecounterBecauseItIsGlobal=11
+
+StupidLongVariablecounterBecauseItIsGlobal=0
 def GurmatVeecharLink(url):	
     res=requests.get(url)
     soup=bs(res.text, 'lxml')
@@ -38,11 +39,18 @@ def getMBs(link):
     for i in khatas:
         title=i[:30]+".mp3"
         finalUrl=khatas[i]
-        urllib.request.urlretrieve(finalUrl,f'D:\\3)GianiSantji\\{title}')
+        #urllib.request.urlretrieve(finalUrl,f'D:\\3)GianiSantji\\{title}')
         print(f'{title} - {finalUrl}')
     print(MBsum)
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FBhai_Pinderpal_Singh_%28Ludhiane_wale%29%2FHukumnama_Katha_Sri_Harmandir_Sahib_2006"
+
+now="Start: "+str(dt.now())
+print(now)
+
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Dalel_Singh_Viakirt"
 getMBs(url)
+
+now="End: "+str(dt.now())
+print(now)
 
 
 
