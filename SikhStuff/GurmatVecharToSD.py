@@ -5,14 +5,11 @@ from datetime import datetime as dt
 
 
 StupidLongVariablecounterBecauseItIsGlobal=0
-def GurmatVeecharLink(url):	
+def getAllLinks(url):
     res=requests.get(url)
     soup=bs(res.text, 'lxml')
     khatas=soup.find_all("table",cellpadding=4)
     khatas=khatas[4:-2]
-    return getAllLinks(khatas)
-
-def getAllLinks(khatas):
     linksWithTitles={}
     for file in khatas:
         newUrl="http://www.gurmatveechar.com/"+file.find("a").get("href")
@@ -22,13 +19,14 @@ def getAllLinks(khatas):
             title=f"{str(StupidLongVariablecounterBecauseItIsGlobal)} ) {file.text}"
             linksWithTitles[title]=newUrl
         else:
-            newLinkWithTitles=GurmatVeecharLink(newUrl)
+            newLinkWithTitles=getAllLinks(newUrl)
             linksWithTitles.update(newLinkWithTitles)
     return linksWithTitles
+
 def getMBs(link):
     import re
     mb=re.compile(r"([0-9]{1,3}(\.[0-9]*)?\s(MB))")
-    khatas=GurmatVeecharLink(link)
+    khatas=getAllLinks(link)
     allMbs=""
     MBsum=0
     for i in khatas:
