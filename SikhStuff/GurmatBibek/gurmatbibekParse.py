@@ -1,5 +1,8 @@
 import pyperclip, time, random,webbrowser
 
+
+#This was originally for only gurmatbibekfourm but then added gurmatbibek articles, tapoban articles and SikhUnityWordPress articles
+
 with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekfourm.txt",'r') as fl: #I took all the links from the fourms and put them into this file. To view 
     lines=fl.readlines()
 d={}
@@ -21,12 +24,20 @@ for line in lines:  #for the fourm
             d[name].append(link)
     except IndexError:
         continue
-with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekArticles.txt",'r') as filee: #I took all the links from the fourms and put them into this file. To view 
+with open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibekArticles.txt",'r') as filee: #This is for the articles from GB and tapoban 
     TheLines=filee.readlines()
-for line in TheLines:
-    line=line.split(" : ")
-    topics.append(line[0].lower()) #the title
-    topics.append(line[1][:-1]) #the link
+    for line in TheLines:
+        line=line.split(" : ")
+        topics.append(line[0].lower()) #the title
+        topics.append(line[1][:-1]) #the link
+
+with open("C:\\Users\\gians\\Desktop\\stuff\\SikhUnityWordPress.txt","r") as filee: #This is from articles from UnityPress
+    fl=filee.readlines()
+    for line in fl:
+        title=line.split(" $$$ ")[0]
+        link=line.split(" $$$ ")[1][:-1] #gets link and remover \n
+        topics.append(title.lower())
+        topics.append(link)
 
 def askTopicsorNames():
     while True:
