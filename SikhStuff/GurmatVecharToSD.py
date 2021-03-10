@@ -39,17 +39,22 @@ def getMBs(link):
         finalUrl=khatas[i]
         #urllib.request.urlretrieve(finalUrl,f'D:\\3)GianiSantji\\{title}')
         print(f'{title} - {finalUrl}')
-    print(MBsum)
+    print(f"Total MBs: {MBsum}",end="\n")
 
-now="Start: "+str(dt.now())
-print(now)
+def EnterUrl(link):
+    start=str(dt.now())
+    getMBs(link)
+    end=str(dt.now())
+    print(f"Start: {start}")
+    print(f"End: {end}",end="\n\n")
+    startSeconds=(int(start[11:13])*60*60)+(int(start[14:16])*60)+int(start[17:19])
+    endSeconds=(int(end[11:13])*60*60)+(int(end[14:16])*60)+int(end[17:19])
+    print(f"Seconds: {endSeconds-startSeconds}")
+    print(f"Minutes: {(endSeconds-startSeconds)/60}")
+    print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Dalel_Singh_Viakirt"
-getMBs(url)
-
-now="End: "+str(dt.now())
-print(now)
-
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha"
+EnterUrl(url)
 
 
     
