@@ -4,7 +4,7 @@ import urllib.request
 
 options = webdriver.ChromeOptions()
 options.headless = True
-br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
+br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
 
 facebookLinks=[
     "https://www.facebook.com/388765791243633/videos/825267938249859",

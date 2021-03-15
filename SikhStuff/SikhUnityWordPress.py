@@ -16,7 +16,7 @@ def getLinkstoEachArticle(urlLst):
             mainDict[title]=link
     return mainDict
 def writeInFile(dictt):
-    br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
+    br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
     br.get("https://www.google.com/search?q=gurmukhi+to+english")
     punjabiTextBox=br.find_element_by_css_selector("#tw-source-text-ta")
     filee=open("C:\\Users\\gians\\Desktop\\stuff\\SikhUnityWordPress.txt","w")

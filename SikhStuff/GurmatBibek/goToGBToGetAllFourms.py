@@ -7,7 +7,7 @@ options.add_argument("--window-size=1920,1080")
 options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 options.add_argument={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"}#my user agent
-br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe',options=options)
+br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
 
 url='https://gurmatbibek.com/forum/list.php?3,page='
 f=open("C:\\Users\\gians\\Desktop\\stuff\\gurmatbibek.txt",'w')

@@ -130,7 +130,7 @@ def chosetitle(titles):
         if 'cop' in whattodowithLink:
             pyperclip.copy(theLink)
         else:
-            #br = webdriver.Chrome('C:\Program Files (x86)\chromedriver.exe')
+            #br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe')
             webbrowser.open(theLink)
     except:
         print("Your input was invalid. :(")
