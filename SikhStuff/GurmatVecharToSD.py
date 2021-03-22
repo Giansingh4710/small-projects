@@ -21,7 +21,7 @@ def getAllLinks(url,folder):
             folderWithLinks[folder].append(title)
             folderWithLinks[folder].append(newUrl)
         else:
-            newFolder=file.text.replace("Ji","Ji ) ") #befor when you got the text from file, it would all appear without spaces so this helps with reading
+            newFolder=file.text[:-8] #befor when you got the text from file, it would all appear without spaces so this helps with reading
             newFolderWithLinks=getAllLinks(newUrl,newFolder)
             folderWithLinks.update(newFolderWithLinks)
     return folderWithLinks
@@ -36,7 +36,7 @@ def getMBs(link):
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
         print(khata+" : ",end="")
 
-        folderPath="D:\\SantInderjeetSinghJi\\"
+        folderPath="D:\\3) Khata\\SwamiJi\\VaarAsa\\"
         if khata!="main":
             folderPath+=khata+"\\"
             os.mkdir(folderPath)
@@ -50,7 +50,7 @@ def getMBs(link):
         print(MBsum)
         allMbSum+=MBsum
         for i in range(len(links)):
-            title=titles[i][:6]+titles[i][50:-52]+".mp3"
+            title=titles[i][6:20]+".mp3"
             urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
     print(f"\nTotal MBs: {allMbSum}")
@@ -68,7 +68,7 @@ def EnterUrl(link):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSant_Giani_Inderjeet_Singh_%28Raqbe_wale%29%2FSri_Gurpartap_Sooraj_Parkash_Katha"
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSwami_Ram_Singh_Nirmala%2FAsa_Di_Vaar_Katha"
 EnterUrl(url)
 
 

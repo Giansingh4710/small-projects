@@ -1,9 +1,6 @@
 import pyperclip, sys
 
-def getpass(username):    
-    file=open("C:\\Users\\gians\\Desktop\\stuff\\passwordGen.txt",'r')
-    filee=file.readlines()
-    file.close()
+def getpass(username,filee):    
     dict={}
     for i in filee:
         try:
@@ -26,12 +23,20 @@ def getpass(username):
     num=int(input())-1
     print(f'Password "{dict[possibility[num]]}" copied for {possibility[num]}')
     return dict[possibility[num]]
+
+
+file=open("C:\\Users\\gians\\Desktop\\stuff\\passwordGen.txt",'r')
+passwordFile=file.readlines()
+file.close()
+
 if len(sys.argv)>1:       
-    pyperclip.copy(getpass(sys.argv[1]))
+    pyperclip.copy(getpass(sys.argv[1],passwordFile))
 else:
+    for i in passwordFile:
+        print(i)
     print('Enter the Key: ', end=" ")
     a=input()
-    pyperclip.copy(getpass(a))    
+    pyperclip.copy(getpass(a,passwordFile))   
 
 
 

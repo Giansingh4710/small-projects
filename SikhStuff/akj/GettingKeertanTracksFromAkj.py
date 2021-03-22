@@ -86,8 +86,8 @@ def download(keertanis):
                 print(title)
             except Exception:
                 print(f"Couldn't download: {title}")
-
-a=getKeertanis(["Bhai Jasbir Singh ","Bibi paramjeet kaur jee (jammu)","Bhai jagpal Singh"])
+keertanis=["Bhai Jasbir Singh ","Bibi paramjeet kaur jee (jammu)","Bhai jagpal Singh"]
+a=getKeertanis(keertanis)
 download(getShabads(a))
 
 
