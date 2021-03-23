@@ -6,7 +6,7 @@ options = webdriver.ChromeOptions()
 options.headless = True
 options.add_argument("--headless")
 options.add_argument={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"}#my user agent
-br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe')#,options=options)
+br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
 
 def getKeertanis(keertanis):
     peopleUrl={}
@@ -16,7 +16,8 @@ def getKeertanis(keertanis):
         dropDown.send_keys(keertani) #send name of keertani to input box
         optCont=br.find_element_by_css_selector("body > div.container > form > div > div > div > div.col-md-3.col-xs-12 > div > div.selectize-dropdown.single.selectpicker.select > div")
         opts=optCont.find_elements_by_class_name("option") #taking all the options from dropdown menu and put in list
-        optLst=[i.text for i in opts] #only the names are in this list as before there was other stuff in the list
+        optLst=[i.get_attribute("data-value") for i in opts] #only the names are in this list as before there was other stuff in the list
+        print(optLst)
         for i in range(len(optLst)):
             print(f'{i+1}) {optLst[i]}')
         if len(optLst)==0:
@@ -73,10 +74,10 @@ def getShabads(keertanis):
 def download(keertanis):
     for keertani in keertanis:
         counter=0
-        path="D:\\2) Keertan\\"
+        path="D:\\2. Keertan\\"
         path=path+keertani
         os.mkdir(path)
-        for track in keertanis[keertani]:
+        for track in keertanis[keertani][::-1]: # the [::-1] means the list is reversed. I want the old tracks to be downloaded first
             counter+=1
             b=track.split('/')
             title=b[-1][:-1]+"3"
@@ -86,7 +87,7 @@ def download(keertanis):
                 print(title)
             except Exception:
                 print(f"Couldn't download: {title}")
-keertanis=["Bhai Jasbir Singh ","Bibi paramjeet kaur jee (jammu)","Bhai jagpal Singh"]
+keertanis=["Bhai narinderpal"]
 a=getKeertanis(keertanis)
 download(getShabads(a))
 
