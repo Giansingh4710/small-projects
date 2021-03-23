@@ -21,7 +21,7 @@ def getAllLinks(url,folder):
             folderWithLinks[folder].append(title)
             folderWithLinks[folder].append(newUrl)
         else:
-            newFolder=file.text[:-8] #befor when you got the text from file, it would all appear without spaces so this helps with reading
+            newFolder=file.text[:-8] ## "Volume 15 Ang 1352-143093 files" what it looks like without the -8. The last 2 nums are the numbers of files in that folder
             newFolderWithLinks=getAllLinks(newUrl,newFolder)
             folderWithLinks.update(newFolderWithLinks)
     return folderWithLinks
@@ -36,7 +36,7 @@ def getMBs(link):
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
         print(khata+" : ",end="")
 
-        folderPath="D:\\3) Khata\\SwamiJi\\VaarAsa\\"
+        folderPath="D:\\3. SurajParkash\\"
         if khata!="main":
             folderPath+=khata+"\\"
             os.mkdir(folderPath)
@@ -50,9 +50,15 @@ def getMBs(link):
         print(MBsum)
         allMbSum+=MBsum
         for i in range(len(links)):
-            title=titles[i][6:20]+".mp3"
+            title=titles[i][:6]+titles[i][50:-52]+".mp3"
+            noNo='\/:*?"<>|' #cant name a file with any of these characters so if the title has any of these characters, the loop will replace them
+            for bad in noNo:
+                if bad in title:
+                    title=title.replace(bad,"#")
             urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
+    print(f"\nTotal MBs: {allMbSum}")
+    print(f"Total GBs: {allMbSum/1000}\n")
     print(f"\nTotal MBs: {allMbSum}")
     print(f"Total GBs: {allMbSum/1000}\n")
 
@@ -68,7 +74,7 @@ def EnterUrl(link):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSwami_Ram_Singh_Nirmala%2FAsa_Di_Vaar_Katha"
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSant_Giani_Inderjeet_Singh_%28Raqbe_wale%29%2FSri_Gurpartap_Sooraj_Parkash_Katha"
 EnterUrl(url)
 
 
