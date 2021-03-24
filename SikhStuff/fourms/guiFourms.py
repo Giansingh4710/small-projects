@@ -1,4 +1,8 @@
+from tkinter.constants import CENTER, LEFT
 import pyperclip, time, random,webbrowser
+import tkinter as tk
+from tkinter import font
+
 
 
 #This was originally for only gurmatbibekfourm but then added gurmatbibek articles, tapoban articles and SikhUnityWordPress articles
@@ -44,21 +48,22 @@ def all_fourms_links():
 
 topics,d=all_fourms_links()
 
-def main(aTopicOrName=""):
-    if aTopicOrName=="":
-        topicsNnames=input("Enter a topic or name of a GurSikh: ")
+def main(aTopicOrName):
+    if aTopicOrName.strip(" ")=="":
+        print("Nothing entered!!")
+        label["text"]="Nothing entered!!"
+        return
     else:
         topicsNnames=aTopicOrName
     names=gursikh(topicsNnames) # names is dict with keys as names of gursikhs and values as a list of all titles and links under that name
     topics=topic(topicsNnames)# returns a list of titles and corresponding links that have the input in it.
     allOptions=[names,topics] 
-    chosetitle(allOptions)  # pick the link you want
-    while True:
-        sametopics=input("Would you like to see the same list again ('Y' or 'N')?: ")
-        if 'y' in sametopics.lower():
-            chosetitle(allOptions)
-        else:
-            break  
+    if chosetitleOrPerson(allOptions)=="exit": 
+        label["text"]="No articles under that input :("
+        return
+    label["text"]="" #to clear the
+    for i in chosetitleOrPerson(allOptions):
+        label["text"]+=i+'\n' 
     
 
 def gursikh(theperson):
@@ -86,21 +91,27 @@ def topic(topicc):
         endlistwithlinks.append(topics[ind]) # the link - the reason I am doing this is so the return is in the same format as gursikh() func
     return endlistwithlinks
 
-def chosetitle(lst):
+def chosetitleOrPerson(lst):
     names,titles=lst
-
     title=[titles[i] for i in range(len(titles)) if i%2==0]
     links=[titles[i] for i in range(len(titles)) if i%2==1]
-    print("\nBy Topic:\n")
-    for i in range(len(links)):
-        print(f'{i+1}) {title[i]}')
+    global forGui
 
-    print("\nBy Name:\n")
+    forGui=[]
+    forGui.append("\nBy Topic:\n")
+    for i in range(len(links)):
+        forGui.append(f'{i+1}) {title[i]}')
+
+    forGui.append("\nBy Name:\n")
     for i in range(len(names)):
         a=len(links)+i+1
-        print(f'{a}) {list(names)[i]}')
-    print("\n")
+        forGui.append(f'{a}) {list(names)[i]}')
+
+    if len(forGui)==2: return "exit"
+    return forGui
     try:
+        for i in forGui:
+            print(i)
         num=int(input("Put the number corresponding to the topic or gursikh you are looking for: "))
         if num<=len(links):
             theLink=links[num-1]
@@ -131,9 +142,49 @@ def openLink(link):
     else:
         webbrowser.open(link)
 
-if __name__=="__main__":
-    while True:
-        main()
-        again=input("Try again?: ")
-        if "n" in again.lower():
-            break
+#-------TKinter----------------
+
+def test():
+    print("test Passed!!")
+
+root=tk.Tk()
+
+height=700
+width=800
+canvas=tk.Canvas(root,height=height,width=width)
+canvas.pack()
+
+background=tk.PhotoImage(file = "C:\\Users\\gians\\Desktop\\pictures\\DhanGuruNanak.jpg")
+#backgroundLable=tk.Label(root, image=background)
+#backgroundLable.place(x=0,y=0,relheight=1,relwidth=1)
+
+frame=tk.Frame(root,bg="#80c1ff")
+frame.place(relx=0,rely=0,relwidth=1,relheight=1)
+
+instruction=tk.Label(frame,font=("courier",11),text="Enter a name of a topic OR a name of a Gursikh.\n(When you type in the search box, the program will go through the\n Gurmat Bibek, Tapoban and Sikh Unity WordPress sites \nand search through the fourms.\n You can type the username of Gursikhs who posted Gurmat bibek and get back all \nthe fourms started by that person.")
+instruction.place(relx=0.05,rely=0,relwidth=0.9,relheight=0.2)
+
+
+entry=tk.Entry(frame)
+entry.place(relx=0.3,rely=0.2,relwidth=0.25,relheight=0.1)
+
+#photo = tk.PhotoImage(file = "C:\\Users\\gians\\Desktop\\pictures\\DhanGuruNanak.jpg")
+#photo=photo.subsample(3,3)
+forGui=[]
+button=tk.Button(frame,font=("courier",12),text="Search",bg="gray",command=lambda: main(entry.get()))
+button.place(relx=0.4,rely=0.3,relwidth=0.1,relheight=0.05)
+
+
+lower_frame = tk.Frame(root, bg='#80c1ff', bd=10)
+lower_frame.place(relx=0.37, rely=0.4, relwidth=0.75, relheight=0.6, anchor='n')
+
+label = tk.Label(lower_frame,font=("courier",8),justify=CENTER)
+label.place(relwidth=1, relheight=1)
+
+if label["text"]!="":
+    numbutton=tk.Button(frame,font=("courier",12),text="num",bg="gray",command=test)
+    numbutton.place(relx=0.7,rely=0.7,relwidth=0.1,relheight=0.05) 
+#print(tk.font.families())
+root.mainloop()
+print(forGui)
+
