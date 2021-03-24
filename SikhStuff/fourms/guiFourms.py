@@ -1,7 +1,8 @@
 from tkinter.constants import CENTER, LEFT
 import pyperclip, time, random,webbrowser
 import tkinter as tk
-from tkinter import font
+import tkinter as ttk
+from tkinter import Frame, font
 
 
 
@@ -59,9 +60,10 @@ def main(aTopicOrName):
     topics=topic(topicsNnames)# returns a list of titles and corresponding links that have the input in it.
     allOptions=[names,topics] 
     if chosetitleOrPerson(allOptions)=="exit": 
+        print("No articles under that input :(")
         label["text"]="No articles under that input :("
         return
-    label["text"]="" #to clear the
+    label["text"]="" #to clear the text in the box
     for i in chosetitleOrPerson(allOptions):
         label["text"]+=i+'\n' 
     
@@ -148,43 +150,38 @@ def test():
     print("test Passed!!")
 
 root=tk.Tk()
+root.title("Search Through Gurmat Bibek, Tabpooban and Other Fourms")
+root.geometry("800x500")
 
-height=700
-width=800
-canvas=tk.Canvas(root,height=height,width=width)
-canvas.pack()
+instruction=tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),text="Enter a name of a topic OR a name of a Gursikh.\n(When you type in the search box, the program will go through the\n Gurmat Bibek, Tapoban and Sikh Unity WordPress sites \nand search through the fourms.\n You can type the username of Gursikhs who posted Gurmat bibek and get back all \nthe fourms started by that person.")
+instruction.pack(side="top",pady=10)
 
-background=tk.PhotoImage(file = "C:\\Users\\gians\\Desktop\\pictures\\DhanGuruNanak.jpg")
-#backgroundLable=tk.Label(root, image=background)
-#backgroundLable.place(x=0,y=0,relheight=1,relwidth=1)
+entry=tk.Entry(root,bg="#80c1ff")
+entry.pack()
 
-frame=tk.Frame(root,bg="#80c1ff")
-frame.place(relx=0,rely=0,relwidth=1,relheight=1)
-
-instruction=tk.Label(frame,font=("courier",11),text="Enter a name of a topic OR a name of a Gursikh.\n(When you type in the search box, the program will go through the\n Gurmat Bibek, Tapoban and Sikh Unity WordPress sites \nand search through the fourms.\n You can type the username of Gursikhs who posted Gurmat bibek and get back all \nthe fourms started by that person.")
-instruction.place(relx=0.05,rely=0,relwidth=0.9,relheight=0.2)
-
-
-entry=tk.Entry(frame)
-entry.place(relx=0.3,rely=0.2,relwidth=0.25,relheight=0.1)
-
-#photo = tk.PhotoImage(file = "C:\\Users\\gians\\Desktop\\pictures\\DhanGuruNanak.jpg")
-#photo=photo.subsample(3,3)
 forGui=[]
-button=tk.Button(frame,font=("courier",12),text="Search",bg="gray",command=lambda: main(entry.get()))
-button.place(relx=0.4,rely=0.3,relwidth=0.1,relheight=0.05)
+button=tk.Button(root,font=("courier",12),text="Search",bg="gray",command=lambda: main(entry.get()))
+button.pack()
+
+label = tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),justify=LEFT)
+label.pack(pady=100,ipadx=300,ipady=300)
+
+canvas=ttk.Canvas(label)
+yscrollbar=ttk.Scrollbar(label,orient="vertical",command=canvas.yview)
+yscrollbar.pack(side="right",fill="y")
+
+canvas.configure(yscrollcommand=yscrollbar.set)
+canvas.bind("<Configure>",lambda e: canvas.configure(scrollregion= canvas.bbox("all")))
+frame=Frame(canvas)
+canvas.create_window((0,0),window=frame,anchor="n")
 
 
-lower_frame = tk.Frame(root, bg='#80c1ff', bd=10)
-lower_frame.place(relx=0.37, rely=0.4, relwidth=0.75, relheight=0.6, anchor='n')
-
-label = tk.Label(lower_frame,font=("courier",8),justify=CENTER)
-label.place(relwidth=1, relheight=1)
+'''
 
 if label["text"]!="":
-    numbutton=tk.Button(frame,font=("courier",12),text="num",bg="gray",command=test)
+    numbutton=tk.Button(root,font=("courier",12),text="num",bg="gray",command=test)
     numbutton.place(relx=0.7,rely=0.7,relwidth=0.1,relheight=0.05) 
 #print(tk.font.families())
+'''
 root.mainloop()
-print(forGui)
-
+#print(forGui)
