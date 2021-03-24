@@ -39,7 +39,7 @@ with open("C:\\Users\\gians\\Desktop\\stuff\\SikhUnityWordPress.txt","r") as fil
         topics.append(title.lower())
         topics.append(link)
 
-def askTopicsorNames():
+def main():
     while True:
         topicsOrNames=input("Do you want to specify by gursikh name or by topics?: ")
         if "gur" in topicsOrNames.lower() or "nam" in topicsOrNames.lower():
@@ -137,4 +137,5 @@ def chosetitle(titles):
         return None
 
 
-askTopicsorNames()
+if __name__=="__main__":
+    main()
