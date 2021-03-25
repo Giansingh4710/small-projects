@@ -1,11 +1,9 @@
 from tkinter.constants import CENTER, LEFT
 import pyperclip, time, random,webbrowser
 import tkinter as tk
-import tkinter as ttk
+from tkinter import *
 from tkinter import simpledialog
-
-from tkinter import Frame, font
-
+import time
 
 
 #This was originally for only gurmatbibekfourm but then added gurmatbibek articles, tapoban articles and SikhUnityWordPress articles
@@ -54,7 +52,8 @@ topics,d=all_fourms_links()
 def main(aTopicOrName):
     if aTopicOrName.strip(" ")=="":
         print("Nothing entered!!")
-        label["text"]="Nothing entered!!"
+        t.delete("0.0",END)
+        t.insert(END,"NoTHING ENTERED !!")#
         return
     else:
         topicsNnames=aTopicOrName
@@ -63,15 +62,17 @@ def main(aTopicOrName):
     allOptions=[names,topics] 
     if chosetitleOrPerson(allOptions)=="exit": 
         print("No articles under that input :(")
-        label["text"]="No articles under that input :("
+        t.delete("0.0",END)
+        t.insert(END,"No articles under that input :(")#
         return
-    label["text"]="" #to clear the text in the box
     titles=chosetitleOrPerson(allOptions)[0]
     links=chosetitleOrPerson(allOptions)[1]
     names=chosetitleOrPerson(allOptions)[2]
+    t.delete("0.0",END)
     for i in titles:
-        label["text"]+=i+'\n' 
+        t.insert(END,i+"\n")
     num=simpledialog.askinteger("Type","Enter the corresponding number:") #num entered by user
+    time.sleep(5)
     if num<titles.index("\nBy Name:\n"):
         webbrowser.open(links[num-1])
     else:
@@ -79,16 +80,16 @@ def main(aTopicOrName):
         print(theName)
         titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
         links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
-        label["text"]="By Topic:\n"
+        t.delete("0.0",END)
         for i in range(len(links)):
-            label["text"]+=f'{i+1}) {titles[i]}\n' 
+            t.insert(END,f'{i+1}) {titles[i]}\n')
         num=simpledialog.askinteger("Type","Enter the corresponding number:")
         webbrowser.open(links[num-1])
 
 
 def gursikh(theperson):
     options={}
-    if theperson=="random" or theperson=="" or theperson==" ": 
+    if theperson.lower()=="random" or theperson=="" or theperson==" ": 
         return options
     for name in d:  #d=  is the dictionary of name of people
         if theperson.lower() in name.lower():
@@ -180,25 +181,15 @@ forGui=[]
 button=tk.Button(root,font=("courier",12),text="Search",bg="gray",command=lambda: main(entry.get()))
 button.pack()
 
-label = tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),justify=LEFT)
-label.pack()
+h = Scrollbar(root, orient = 'horizontal')
+h.pack(side = BOTTOM, fill = X)
 
-#canvas=ttk.Canvas(label)
-#yscrollbar=ttk.Scrollbar(label,orient="vertical",command=canvas.yview)
-#yscrollbar.pack(side="right",fill="y")
-#
-#canvas.configure(yscrollcommand=yscrollbar.set)
-#canvas.bind("<Configure>",lambda e: canvas.configure(scrollregion= canvas.bbox("all")))
-#frame=Frame(canvas)
-#canvas.create_window((0,0),window=frame,anchor="n")
+v = Scrollbar(root)
+v.pack(side = RIGHT, fill = Y)
+t = tk.Text(root, width = 50, height = 20, wrap = NONE,xscrollcommand = h.set,yscrollcommand = v.set)
+t.pack(side=TOP, fill=X)
+h.config(command=t.xview)
+v.config(command=t.yview)
 
-
-'''
-
-if label["text"]!="":
-    numbutton=tk.Button(root,font=("courier",12),text="num",bg="gray",command=test)
-    numbutton.place(relx=0.7,rely=0.7,relwidth=0.1,relheight=0.05) 
-#print(tk.font.families())
-'''
 root.mainloop()
 #print(forGui)
