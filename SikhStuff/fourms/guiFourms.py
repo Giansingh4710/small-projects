@@ -1,5 +1,4 @@
-from tkinter.constants import CENTER, LEFT
-import pyperclip, time, random,webbrowser
+import pyperclip, random,webbrowser
 import tkinter as tk
 from tkinter import *
 from tkinter import simpledialog
@@ -50,41 +49,43 @@ def all_fourms_links():
 topics,d=all_fourms_links()
 
 def main(aTopicOrName):
-    if aTopicOrName.strip(" ")=="":
-        print("Nothing entered!!")
+    try:
+        if aTopicOrName.strip(" ")=="":
+            print("Nothing entered!!")
+            t.delete("0.0",END)
+            t.insert(END,"NoTHING ENTERED !!")#
+            return
+        else:
+            topicsNnames=aTopicOrName
+        names=gursikh(topicsNnames) # names is dict with keys as names of gursikhs and values as a list of all titles and links under that name
+        topics=topic(topicsNnames)# returns a list of titles and corresponding links that have the input in it.
+        allOptions=[names,topics] 
+        if chosetitleOrPerson(allOptions)=="exit": 
+            print("No articles under that input :(")
+            t.delete("0.0",END)
+            t.insert(END,"No articles under that input :(")#
+            return
+        titles=chosetitleOrPerson(allOptions)[0]
+        links=chosetitleOrPerson(allOptions)[1]
+        names=chosetitleOrPerson(allOptions)[2]
         t.delete("0.0",END)
-        t.insert(END,"NoTHING ENTERED !!")#
-        return
-    else:
-        topicsNnames=aTopicOrName
-    names=gursikh(topicsNnames) # names is dict with keys as names of gursikhs and values as a list of all titles and links under that name
-    topics=topic(topicsNnames)# returns a list of titles and corresponding links that have the input in it.
-    allOptions=[names,topics] 
-    if chosetitleOrPerson(allOptions)=="exit": 
-        print("No articles under that input :(")
-        t.delete("0.0",END)
-        t.insert(END,"No articles under that input :(")#
-        return
-    titles=chosetitleOrPerson(allOptions)[0]
-    links=chosetitleOrPerson(allOptions)[1]
-    names=chosetitleOrPerson(allOptions)[2]
-    t.delete("0.0",END)
-    for i in titles:
-        t.insert(END,i+"\n")
-    num=simpledialog.askinteger("Type","Enter the corresponding number:") #num entered by user
-    time.sleep(5)
-    if num<titles.index("\nBy Name:\n"):
-        webbrowser.open(links[num-1])
-    else:
-        theName=list(names)[num-len(links)-1]  #you can't index a dict so made into a list and then index to get the name
-        print(theName)
-        titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
-        links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
-        t.delete("0.0",END)
-        for i in range(len(links)):
-            t.insert(END,f'{i+1}) {titles[i]}\n')
-        num=simpledialog.askinteger("Type","Enter the corresponding number:")
-        webbrowser.open(links[num-1])
+        for i in titles:
+            t.insert(END,i+"\n")
+        num=simpledialog.askinteger("Type","Enter the corresponding number:") #num entered by user
+        if num<titles.index("\nBy Name:\n"):
+            webbrowser.open(links[num-1])
+        else:
+            theName=list(names)[num-len(links)-1]  #you can't index a dict so made into a list and then index to get the name
+            print(theName)
+            titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
+            links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
+            t.delete("0.0",END)
+            for i in range(len(links)):
+                t.insert(END,f'{i+1}) {titles[i]}\n')
+            num=simpledialog.askinteger("Type","Enter the corresponding number:")
+            webbrowser.open(links[num-1])
+    except Exception:
+        print("You pressed 'x' on the window or something else")
 
 
 def gursikh(theperson):
@@ -129,49 +130,14 @@ def chosetitleOrPerson(lst):
 
     if len(forGui)==2: return "exit"
     return forGui,links,names
-    try:
-        for i in forGui:
-            print(i)
-        num=int(input("Put the number corresponding to the topic or gursikh you are looking for: "))
-        if num<=len(links):
-            theLink=links[num-1]
-        else:
-            theName=list(names)[num-len(links)-1]  #you can't index a dict so made into a list and then index to get the name
-            print(theName)
-            titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
-            links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
-            print("\nBy Topic:\n")
-            for i in range(len(links)):
-                print(f'{i+1}) {titles[i]}') 
-            num=int(input("Put the number corresponding to the topic you are looking for: "))
-            theLink=links[num-1]
-    except Exception:
-        print("Your input was invalid. :(")
-        theLink=""
-    openLink(theLink)
-
-def openLink(link):
-    if link=="":
-        print("Not valid input")
-        return
-    whattodowithLink=input("Would you like to 'open', 'copy' or do 'nothing'? : ")
-    if 'no' in whattodowithLink:
-        print("OK. No Problem !")
-    if 'cop' in whattodowithLink:
-        pyperclip.copy(link)
-    else:
-        webbrowser.open(link)
 
 #-------TKinter----------------
-
-def test():
-    print("test Passed!!")
 
 root=tk.Tk()
 root.title("Search Through Gurmat Bibek, Tabpooban and Other Fourms")
 root.geometry("800x500")
 
-instruction=tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),text="Enter a name of a topic OR a name of a Gursikh.\n(When you type in the search box, the program will go through the\n Gurmat Bibek, Tapoban and Sikh Unity WordPress sites \nand search through the fourms.\n You can type the username of Gursikhs who posted Gurmat bibek and get back all \nthe fourms started by that person.")
+instruction=tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),text="Enter a name of a topic OR a name of a Gursikh.\n(When you type in the search box, the program will go through the\n Gurmat Bibek, Tapoban and Sikh Unity WordPress sites \nand search through the fourms.\n You can type the username of Gursikhs who posted Gurmat bibek and get back all \nthe fourms started by that person.\nYou can also type 'random' to get back random article.")
 instruction.pack(side="top",pady=10)
 
 entry=tk.Entry(root,bg="#80c1ff")
@@ -192,4 +158,3 @@ h.config(command=t.xview)
 v.config(command=t.yview)
 
 root.mainloop()
-#print(forGui)
