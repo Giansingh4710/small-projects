@@ -2,6 +2,8 @@ from tkinter.constants import CENTER, LEFT
 import pyperclip, time, random,webbrowser
 import tkinter as tk
 import tkinter as ttk
+from tkinter import simpledialog
+
 from tkinter import Frame, font
 
 
@@ -64,9 +66,25 @@ def main(aTopicOrName):
         label["text"]="No articles under that input :("
         return
     label["text"]="" #to clear the text in the box
-    for i in chosetitleOrPerson(allOptions):
+    titles=chosetitleOrPerson(allOptions)[0]
+    links=chosetitleOrPerson(allOptions)[1]
+    names=chosetitleOrPerson(allOptions)[2]
+    for i in titles:
         label["text"]+=i+'\n' 
-    
+    num=simpledialog.askinteger("Type","Enter the corresponding number:") #num entered by user
+    if num<titles.index("\nBy Name:\n"):
+        webbrowser.open(links[num-1])
+    else:
+        theName=list(names)[num-len(links)-1]  #you can't index a dict so made into a list and then index to get the name
+        print(theName)
+        titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
+        links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
+        label["text"]="By Topic:\n"
+        for i in range(len(links)):
+            label["text"]+=f'{i+1}) {titles[i]}\n' 
+        num=simpledialog.askinteger("Type","Enter the corresponding number:")
+        webbrowser.open(links[num-1])
+
 
 def gursikh(theperson):
     options={}
@@ -97,7 +115,6 @@ def chosetitleOrPerson(lst):
     names,titles=lst
     title=[titles[i] for i in range(len(titles)) if i%2==0]
     links=[titles[i] for i in range(len(titles)) if i%2==1]
-    global forGui
 
     forGui=[]
     forGui.append("\nBy Topic:\n")
@@ -110,7 +127,7 @@ def chosetitleOrPerson(lst):
         forGui.append(f'{a}) {list(names)[i]}')
 
     if len(forGui)==2: return "exit"
-    return forGui
+    return forGui,links,names
     try:
         for i in forGui:
             print(i)
@@ -164,16 +181,16 @@ button=tk.Button(root,font=("courier",12),text="Search",bg="gray",command=lambda
 button.pack()
 
 label = tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),justify=LEFT)
-label.pack(pady=100,ipadx=300,ipady=300)
+label.pack()
 
-canvas=ttk.Canvas(label)
-yscrollbar=ttk.Scrollbar(label,orient="vertical",command=canvas.yview)
-yscrollbar.pack(side="right",fill="y")
-
-canvas.configure(yscrollcommand=yscrollbar.set)
-canvas.bind("<Configure>",lambda e: canvas.configure(scrollregion= canvas.bbox("all")))
-frame=Frame(canvas)
-canvas.create_window((0,0),window=frame,anchor="n")
+#canvas=ttk.Canvas(label)
+#yscrollbar=ttk.Scrollbar(label,orient="vertical",command=canvas.yview)
+#yscrollbar.pack(side="right",fill="y")
+#
+#canvas.configure(yscrollcommand=yscrollbar.set)
+#canvas.bind("<Configure>",lambda e: canvas.configure(scrollregion= canvas.bbox("all")))
+#frame=Frame(canvas)
+#canvas.create_window((0,0),window=frame,anchor="n")
 
 
 '''
