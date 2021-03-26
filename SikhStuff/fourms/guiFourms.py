@@ -1,8 +1,7 @@
-import pyperclip, random,webbrowser
+import random,webbrowser
 import tkinter as tk
 from tkinter import *
 from tkinter import simpledialog
-import time
 
 
 #This was originally for only gurmatbibekfourm but then added gurmatbibek articles, tapoban articles and SikhUnityWordPress articles
