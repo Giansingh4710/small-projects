@@ -1,6 +1,7 @@
 import random,webbrowser
 import tkinter as tk
-from tkinter import *
+from tkinter import Scrollbar
+from tkinter import BOTTOM, X, RIGHT, Y, NONE, TOP, END
 from tkinter import simpledialog
 
 
@@ -48,43 +49,40 @@ def all_fourms_links():
 topics,d=all_fourms_links()
 
 def main(aTopicOrName):
-    try:
-        if aTopicOrName.strip(" ")=="":
-            print("Nothing entered!!")
-            t.delete("0.0",END)
-            t.insert(END,"NoTHING ENTERED !!")#
-            return
-        else:
-            topicsNnames=aTopicOrName
-        names=gursikh(topicsNnames) # names is dict with keys as names of gursikhs and values as a list of all titles and links under that name
-        topics=topic(topicsNnames)# returns a list of titles and corresponding links that have the input in it.
-        allOptions=[names,topics] 
-        if chosetitleOrPerson(allOptions)=="exit": 
-            print("No articles under that input :(")
-            t.delete("0.0",END)
-            t.insert(END,"No articles under that input :(")#
-            return
-        titles=chosetitleOrPerson(allOptions)[0]
-        links=chosetitleOrPerson(allOptions)[1]
-        names=chosetitleOrPerson(allOptions)[2]
+    if aTopicOrName.strip(" ")=="":
+        print("Nothing entered!!")
         t.delete("0.0",END)
-        for i in titles:
-            t.insert(END,i+"\n")
-        num=simpledialog.askinteger("Type","Enter the corresponding number:") #num entered by user
-        if num<titles.index("\nBy Name:\n"):
-            webbrowser.open(links[num-1])
-        else:
-            theName=list(names)[num-len(links)-1]  #you can't index a dict so made into a list and then index to get the name
-            print(theName)
-            titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
-            links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
-            t.delete("0.0",END)
-            for i in range(len(links)):
-                t.insert(END,f'{i+1}) {titles[i]}\n')
-            num=simpledialog.askinteger("Type","Enter the corresponding number:")
-            webbrowser.open(links[num-1])
-    except Exception:
-        print("You pressed 'x' on the window or something else")
+        t.insert(END,"NoTHING ENTERED !!")#
+        return
+    else:
+        topicsNnames=aTopicOrName
+    names=gursikh(topicsNnames) # names is dict with keys as names of gursikhs and values as a list of all titles and links under that name
+    topics=topic(topicsNnames)# returns a list of titles and corresponding links that have the input in it.
+    allOptions=[names,topics] 
+    if chosetitleOrPerson(allOptions)=="exit": 
+        print("No articles under that input :(")
+        t.delete("0.0",END)
+        t.insert(END,"No articles under that input :(")#
+        return
+    titles=chosetitleOrPerson(allOptions)[0]
+    links=chosetitleOrPerson(allOptions)[1]
+    names=chosetitleOrPerson(allOptions)[2]
+    t.delete("0.0",END)
+    for i in titles:
+        t.insert(END,i+"\n")
+    num=simpledialog.askinteger("Type","Enter the corresponding number:") #num entered by user
+    if num<titles.index("\nBy Name:\n"):
+        webbrowser.open(links[num-1])
+    else:
+        theName=list(names)[num-len(links)-1]  #you can't index a dict so made into a list and then index to get the name
+        print(theName)
+        titles=[names[theName][i] for i in range(len(names[theName])) if i%2==0]          
+        links=[names[theName][i] for i in range(len(names[theName])) if i%2==1] 
+        t.delete("0.0",END)
+        for i in range(len(links)):
+            t.insert(END,f'{i+1}) {titles[i]}\n')
+        num=simpledialog.askinteger("Type","Enter the corresponding number:")
+        webbrowser.open(links[num-1])
 
 
 def gursikh(theperson):
