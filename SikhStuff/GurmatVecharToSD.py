@@ -49,15 +49,21 @@ def getAllLinks(url,folder="main"):
 
 allMbSum=0
 def download(khatas,thePath):
+    #for i in khatas:
+    #    print(i)
     for khata in khatas:
         if khata!="main":
             folderPath=thePath+khata+"\\"
             os.mkdir(folderPath)
-            if type(khatas[khata][0])==dict:
-                listOfDict=khatas[khata]
-                for dictt in listOfDict:
-                    download(dictt,folderPath)
-                continue #so the dict of dicts dosen't keep going down
+            try:
+                if type(khatas[khata][0])==dict:
+                    listOfDict=khatas[khata]
+                    for dictt in listOfDict:
+                        print(dictt)
+                        download(dictt,folderPath)
+                    continue #so the dict of dicts dosen't keep going down
+            except TypeError:
+                print("BaseCase. List inside dictionary and not another Dictionary!!!")
         titles=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2==0]
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
         FolderMbs=""
@@ -76,8 +82,8 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
-            print(f'{title} - {links[i]}')
+            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            #print(f'{title} - {links[i]}')
 
 def EnterUrl(link,path):
     start=str(dt.now())
@@ -102,7 +108,7 @@ def EnterUrl(link,path):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKeertan%2FBhai_Avtar_Singh_%28Delhi_wale%29"
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29"
 path="C:\\users\\gians\\desktop\\test"
 EnterUrl(url,path)
 

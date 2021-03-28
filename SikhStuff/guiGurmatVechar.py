@@ -10,10 +10,9 @@ from bs4 import BeautifulSoup as bs
 import requests
 from datetime import datetime as dt
 import os,re
+mb=re.compile(r"([0-9]{1,3}(\.[0-9]*)?\xa0((MB)|(KB)|(GB)))")
 
-
-totalFiles=0
-def getAllLinks(url,folder):
+def getAllLinks(url,folder="main",totalFiles=0):
     res=requests.get(url)
     soup=bs(res.text, 'lxml')
     khatas=soup.find_all("table",cellpadding=4)
@@ -28,7 +27,6 @@ def getAllLinks(url,folder):
             continue
         newUrl="http://www.gurmatveechar.com/"+file.find("a").get("href")
         if "mp3" in newUrl.lower():
-            global totalFiles
             totalFiles+=1
             count+=1
             length=file.find_all("td",align="right")
@@ -40,62 +38,69 @@ def getAllLinks(url,folder):
             folderWithLinks[folder].append(newUrl)
         else:
             newFolder=title
-            newFolderWithLinks=getAllLinks(newUrl,newFolder)
-            folderWithLinks.update(newFolderWithLinks)
-    return folderWithLinks
+            newFolderWithLinks,totalFiles=getAllLinks(newUrl,newFolder,totalFiles)
+            if folder=="main": # the purpose og this statement is so that when we make the folders to download the files, the folders in the folder end up in the folder lol
+                folderWithLinks.update(newFolderWithLinks)
+            else:
+                folderWithLinks[folder].append(newFolderWithLinks) 
+                #ifthere is a folder in a folder, the MAIN folder will be the key 
+                # and its keys are other dictionaies. The keys to ALL dictionaries are titles of folders 
+                # and the base value is a list of links
+                #the program will keep recusing as long as there is folder and will stop when there are
+                #mp3 files
+    return folderWithLinks,totalFiles
 
-def getMBs(link,path):
-    label.config(text=f"waiting...")
-    root.update_idletasks()
-    khatas=getAllLinks(link,"main")
-    mb=re.compile(r"([0-9]{1,3}(\.[0-9]*)?\xa0((MB)|(KB)|(GB)))")
-    MBsum=0
-    label.config(text="Calculating the size of the files...")
-    root.update_idletasks()
-    t.delete(f"0.0",END)
-    for folder in khatas:
-        for file in khatas[folder]:
-            if mb.findall(file)!=[]:
-                a=mb.findall(file)[0][0]
-                if "kb" in a.lower():
-                    val = float(a[:-3])/1000
-                elif "mb" in a.lower():
-                    val=float(a[:-3])
-                elif "gb" in a.lower():
-                    val=float(a[:-3])*1000
-                MBsum+=val
-    askifContinue=tk.messagebox.askquestion("Continue?",f"In total there are {MBsum} MBs. Would you Like to download?")
-    if askifContinue=="no":
-        quit()
+allMbSum=0
+def download(khatas,thePath):
     for khata in khatas:
-        t.insert(END, f"New Folder - {khata}\n")
-        root.update_idletasks()
+        if khata!="main":
+            folderPath=thePath+khata+"\\"
+            os.mkdir(folderPath)
+            print(khatas[khata])
+            if ((type(khatas[khata][0])==dict)):
+                listOfDict=khatas[khata]
+                for dictt in listOfDict:
+                    download(dictt,folderPath)
+                continue #so the dict of dicts dosen't keep going down
         titles=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2==0]
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
-        if path[-1]!="\\":
-            folderPath=path+"\\"
-        else:
-            folderPath=path
-        if khata!="main":
-            folderPath+=khata+"\\"
-            #os.mkdir(folderPath)
-            print(folderPath)
+        FolderMbs=""
+        MBsum=0
+        for i in titles:
+            FolderMbs+=i
+        for i in mb.findall(FolderMbs):
+            val=float(i[0][:-3])
+            MBsum+=val
+        global allMbSum
+        allMbSum+=MBsum
+        print("\n"+khata+" : ",MBsum)
+        t.insert(END,"\n"+khata+" : "+str(MBsum))
         for i in range(len(links)):
-            progress['value'] = 20
-            root.update_idletasks()
             title=titles[i].split("???")[0]+".mp3"
-            noNo='\/:*?"<>|' 
+            noNo='\/:*?"<>|' #cant name a file with any of these characters so if the title has any of these characters, the loop will replace them
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
             #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
-            t.insert(END,f'{title} - {links[i]}\n')
-            root.update_idletasks()
             print(f'{title} - {links[i]}')
+            t.insert(END,f'{title} - {links[i]}\n')
+            label.config(text=f'{title} - {links[i]}')
+            progress["value"]+= 1
+            root.update_idletasks()
 
 def main(link):
+    t.delete(f"0.0",END)
     path=simpledialog.askstring("Type","Enter the path were you want to download the files (exp: 'C:\\Users\\gians\\Desktop\\CS\\pythons\\small-projects\\SikhStuff'):")
-    getMBs(link,path)
+
+    label["text"]="Calculating..."
+    root.update_idletasks()
+
+    if path[-1]!="\\":
+        path+="\\"
+
+    khatas,totalFiles=getAllLinks(link)
+    download(khatas,path)
+
     label.config(text=f"In total, there are {totalFiles} files!!!")    
 
 #url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSant_Giani_Inderjeet_Singh_%28Raqbe_wale%29%2FSri_Gurpartap_Sooraj_Parkash_Katha"
@@ -128,6 +133,9 @@ label.pack(pady=10)
 h = Scrollbar(root, orient = 'horizontal')
 h.pack(side = BOTTOM, fill = X)
 
+progress = Progressbar(root, orient = HORIZONTAL,length = 100, mode = 'determinate',)
+progress.pack(pady = 30)
+
 v = Scrollbar(root)
 v.pack(side = RIGHT, fill = Y)
 t = tk.Text(root, width = 50, height = 40, wrap = NONE,xscrollcommand = h.set,yscrollcommand = v.set)
@@ -135,7 +143,5 @@ t.pack(side=TOP, fill=X,pady=100)
 h.config(command=t.xview)
 v.config(command=t.yview)
 
-progress = Progressbar(root, orient = HORIZONTAL,length = 100, mode = 'indeterminate',)
-progress.pack(pady = 30)
 
 root.mainloop()
