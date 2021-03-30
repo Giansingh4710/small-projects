@@ -49,21 +49,16 @@ def getAllLinks(url,folder="main"):
 
 allMbSum=0
 def download(khatas,thePath):
-    #for i in khatas:
-    #    print(i)
     for khata in khatas:
+        folderPath=thePath
         if khata!="main":
             folderPath=thePath+khata+"\\"
             os.mkdir(folderPath)
-            try:
-                if type(khatas[khata][0])==dict:
-                    listOfDict=khatas[khata]
-                    for dictt in listOfDict:
-                        print(dictt)
-                        download(dictt,folderPath)
-                    continue #so the dict of dicts dosen't keep going down
-            except TypeError:
-                print("BaseCase. List inside dictionary and not another Dictionary!!!")
+            if type(khatas[khata][0])==dict:
+                listOfDict=khatas[khata]
+                for dictt in listOfDict:
+                    download(dictt,folderPath)
+                continue #so the dict of dicts dosen't keep going down
         titles=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2==0]
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
         FolderMbs=""
@@ -82,8 +77,8 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
-            #print(f'{title} - {links[i]}')
+            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            print(f'{title} - {links[i]}')
 
 def EnterUrl(link,path):
     start=str(dt.now())
