@@ -53,11 +53,12 @@ def download(khatas,thePath):
         folderPath=thePath
         if khata!="main":
             folderPath=thePath+khata+"\\"
-            os.mkdir(folderPath)
-            if type(khatas[khata][0])==dict:
+            #os.mkdir(folderPath)
+            if type(khatas[khata][0])==dict: #made this call so that it doesen't have to search through EACH file when the first is not a dict
                 listOfDict=khatas[khata]
                 for dictt in listOfDict:
-                    download(dictt,folderPath)
+                    if type(dictt)==dict:  #somtimes there are folders and files in a folder so this will check for that. If not a dict, the won't recurse
+                        download(dictt,folderPath)
                 continue #so the dict of dicts dosen't keep going down
         titles=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2==0]
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
@@ -66,7 +67,13 @@ def download(khatas,thePath):
         for i in titles:
             FolderMbs+=i
         for i in mb.findall(FolderMbs):
-            val=float(i[0][:-3])
+            a=i[0]
+            if "kb" in a.lower():
+                val=float(a[:-3])/1000
+            elif "gb" in a.lower():
+                val=float(a[:-3])*1000
+            else:
+                val=float(a[:-3])
             MBsum+=val
         global allMbSum
         allMbSum+=MBsum
@@ -77,7 +84,7 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
 
 def EnterUrl(link,path):
