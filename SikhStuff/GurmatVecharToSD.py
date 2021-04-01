@@ -53,7 +53,7 @@ def download(khatas,thePath):
         folderPath=thePath
         if khata!="main":
             folderPath=thePath+khata+"\\"
-            #os.mkdir(folderPath)
+            os.mkdir(folderPath)
             if type(khatas[khata][0])==dict: #made this call so that it doesen't have to search through EACH file when the first is not a dict
                 listOfDict=khatas[khata]
                 for dictt in listOfDict:
@@ -84,7 +84,7 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
 
 def EnterUrl(link,path):
@@ -110,7 +110,7 @@ def EnterUrl(link,path):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29"
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKeertan%2FBhai_Avtar_Singh_%28Delhi_wale%29"
 path="C:\\users\\gians\\desktop\\test"
 EnterUrl(url,path)
 

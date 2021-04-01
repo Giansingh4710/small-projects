@@ -6,7 +6,7 @@ options = webdriver.ChromeOptions()
 options.headless = True
 options.add_argument("--headless")
 options.add_argument={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"}#my user agent
-br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
+br = webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe')#,options=options)
 
 def getKeertanis(keertanis):
     peopleUrl={}
@@ -44,6 +44,7 @@ def getKeertanis(keertanis):
 
 #this will take in the dictionary generated from the getKeertanis func
 def getShabads(keertanis):
+    print("Finding tracks...")
     keertanTracks={}
     for keertani in keertanis:
         br.get(keertanis[keertani]) #the key is the name and the value is the url
@@ -51,7 +52,7 @@ def getShabads(keertanis):
         keertanTracks[keertani]=[]
         for plus in pluses:
             plus.click()
-            time.sleep(0.5)  #All this code above in this func is to open all the '+' buttons on the akj website so I can scrape the shabads
+            time.sleep(0.2)  #All this code above in this func is to open all the '+' buttons on the akj website so I can scrape the shabads
         atags=br.find_elements_by_tag_name("a")
         for atag in atags:
             link=atag.get_attribute("href")
@@ -72,6 +73,7 @@ def getShabads(keertanis):
 
 
 def download(keertanis):
+    print("Now downloading")
     for keertani in keertanis:
         counter=0
         path="D:\\Keertan\\"
@@ -87,7 +89,7 @@ def download(keertanis):
                 print(title)
             except Exception:
                 print(f"Couldn't download: {title}")
-keertanis=["Bibi paramjeet","Bibi Sant","Bhai jagpal"]
+keertanis=["Bhai jagpal"]
 a=getKeertanis(keertanis)
 download(getShabads(a))
 
