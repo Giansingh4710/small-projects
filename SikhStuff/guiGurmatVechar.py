@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import Scrollbar
-from tkinter.ttk import *
-from tkinter import *
+from tkinter import Scrollbar, HORIZONTAL
+from tkinter.ttk import Progressbar
+#from tkinter import *
 from tkinter import BOTTOM, X, RIGHT, Y, NONE, TOP, END
 from tkinter import simpledialog       
 import time
@@ -51,7 +51,7 @@ def getAllLinks(url,folder="main",totalFiles=0):
     return folderWithLinks,totalFiles
 
 allMbSum=0
-def download(khatas,thePath):
+def download(khatas,thePath,totalFiles):
     for khata in khatas:
         if khata!="main":
             folderPath=thePath+khata+"\\"
@@ -60,8 +60,10 @@ def download(khatas,thePath):
             if ((type(khatas[khata][0])==dict)):
                 listOfDict=khatas[khata]
                 for dictt in listOfDict:
-                    download(dictt,folderPath)
+                    download(dictt,folderPath,totalFiles)
                 continue #so the dict of dicts dosen't keep going down
+        else:
+            folderPath=thePath
         titles=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2==0]
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
         FolderMbs=""
@@ -73,20 +75,19 @@ def download(khatas,thePath):
             MBsum+=val
         global allMbSum
         allMbSum+=MBsum
-        print("\n"+khata+" : ",MBsum)
-        t.insert(END,"\n"+khata+" : "+str(MBsum))
+        t.insert(END,"\n"+khata+" : "+str(MBsum)+"\n")
         for i in range(len(links)):
             title=titles[i].split("???")[0]+".mp3"
             noNo='\/:*?"<>|' #cant name a file with any of these characters so if the title has any of these characters, the loop will replace them
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
             t.insert(END,f'{title} - {links[i]}\n')
-            label.config(text=f'{title} - {links[i]}')
-            progress["value"]+= 1
+            progress["value"]+= 100/totalFiles
             root.update_idletasks()
+            time.sleep(0.1)
 
 def main(link):
     t.delete(f"0.0",END)
@@ -95,17 +96,22 @@ def main(link):
     label["text"]="Calculating..."
     root.update_idletasks()
 
-    if path[-1]!="\\":
-        path+="\\"
+    try:
+        if path[-1]!="\\":
+            path+="\\"
 
-    khatas,totalFiles=getAllLinks(link)
-    download(khatas,path)
+        khatas,totalFiles=getAllLinks(link)
+        download(khatas,path,totalFiles)
+    except Exception as e:
+        t.insert(END,"ERROR: ")
+        t.insert(END,e)
+        print(e)
 
     label.config(text=f"In total, there are {totalFiles} files!!!")    
 
-#url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSant_Giani_Inderjeet_Singh_%28Raqbe_wale%29%2FSri_Gurpartap_Sooraj_Parkash_Katha"
-#EnterUrl(url)
-
+def openGV():
+    import webbrowser
+    webbrowser.open("http://www.gurmatveechar.com/audio.php?q")
 
 
 
@@ -115,7 +121,7 @@ def main(link):
 
 root=tk.Tk()
 root.title("Download any folder from gurmatveechar.com")
-root.geometry("1100x800")
+root.geometry("1000x700")
 
 instruction=tk.Label(root,fg="blue",bg="#80c1ff",font=("courier",11),text="Enter the link (in the yellow box)of the folder you want to download from Gurmatveechar.om\n(exp: 'http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29')")
 instruction.pack(side="top",pady=10)
@@ -124,22 +130,28 @@ entry=tk.Entry(root,bg="yellow",width=150)
 entry.pack()
 
 forGui=[]
-button=tk.Button(root,font=("courier",12),text="Search",bg="gray",command=lambda: main(entry.get()))
+
+goToGV=tk.Button(root,font=("courier",8),text="click here to go to Gurmatveechar.com",bg="gray",command=openGV)
+goToGV.pack()
+
+button=tk.Button(root,font=("courier",12),text="click here after you have copy and pasted the link you want",bg="gray",command=lambda: main(entry.get()))
 button.pack()
 
-label=tk.Label(root,width=50,height=2,bg="#80c1ff",font=("courier",13),text="It might take some time to download the files")
-label.pack(pady=10)
+
+
+label=tk.Label(root,width=45,height=4,bg="#80c1ff",font=("courier",13),text="It might take some time to download the files")
+label.pack()
 
 h = Scrollbar(root, orient = 'horizontal')
 h.pack(side = BOTTOM, fill = X)
 
 progress = Progressbar(root, orient = HORIZONTAL,length = 100, mode = 'determinate',)
-progress.pack(pady = 30)
+progress.pack(pady = 10)
 
 v = Scrollbar(root)
 v.pack(side = RIGHT, fill = Y)
-t = tk.Text(root, width = 50, height = 40, wrap = NONE,xscrollcommand = h.set,yscrollcommand = v.set)
-t.pack(side=TOP, fill=X,pady=100)
+t = tk.Text(root, wrap = NONE,xscrollcommand = h.set,yscrollcommand = v.set)
+t.pack(side=TOP,fill="both")
 h.config(command=t.xview)
 v.config(command=t.yview)
 

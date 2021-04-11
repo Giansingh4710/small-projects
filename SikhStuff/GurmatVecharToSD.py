@@ -110,8 +110,12 @@ def EnterUrl(link,path):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKeertan%2FBhai_Avtar_Singh_%28Delhi_wale%29"
-path="C:\\users\\gians\\desktop\\test"
+#url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKeertan%2FBhai_Avtar_Singh_%28Delhi_wale%29"
+#path="C:\\users\\gians\\desktop\\test"
+url=input("Enter the gurmatveechar.com link: ")
+path=input("Enter the path: ")
+if path[-1]!="\\":
+            path+="\\"
 EnterUrl(url,path)
 
 
