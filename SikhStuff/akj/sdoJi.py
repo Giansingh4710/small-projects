@@ -14,11 +14,16 @@ def goldenKhajana(link):
 def download(links,path):
     if path[-1]!="\\":
         path+="\\"
-    print(path)
-    for i in links[245:]:
+    count=0
+    print(len(links))
+    print(len(set(links)))
+    links=sorted(set(links))
+    for i in links:
+        count+=1
         title=i.split("/")
         title=''.join(title[-1])
         title=title.replace("%20"," ",-1)
+        title=f'{count}) {title}'
         try:
             urllib.request.urlretrieve(i,path+title)
             print(f"Downloaded: {title}")
@@ -28,7 +33,7 @@ def download(links,path):
 
 
 links=goldenKhajana("http://sikhsoul.com/golden_khajana/index.php?q=f&f=%2FKeertan%2FBhai+Mohinder+Singh+SDO")
-path="D:\\Keertan\\SdoJi\\"
+path="D:\\2) Keertan\\SDO ji"
 download(links,path)
 
 

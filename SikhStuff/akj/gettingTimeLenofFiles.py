@@ -1,21 +1,25 @@
 import os
 from mutagen.mp3 import MP3
 
-directory = "D:\\"
-os.chdir(directory)
 
 timeInSeconds=0
+count=0
 def goThroughFiles(dir):
     global timeInSeconds
+    global count
     for thing in os.listdir(dir):
         if thing=="System Volume Information": continue
         path=dir+"\\"+thing
         if os.path.isdir(path):
             goThroughFiles(path)
         elif os.path.isfile(path):
-            audio=MP3(path)
-            timeInSeconds+=audio.info.length
-    return timeInSeconds                     
+            try:
+                count+=1
+                audio=MP3(path)
+                timeInSeconds+=audio.info.length
+            except Exception as e:
+                print(f'{thing} failed : {e}')
+    return timeInSeconds,count                     
 
 
 def nicePrint(seconds):
@@ -36,8 +40,13 @@ def nicePrint(seconds):
     print("So in total:", end=" ")
     print(f"{int(fullDays)} days, {int(fullHour)} hours, {int(fullminutes)} minutes, {int(timeleft)} seconds")
 
-a=goThroughFiles(directory); 
+directory = "D:\\2) Keertan"
+#directory = "D:\\"
+os.chdir(directory)
+a,count=goThroughFiles(directory)
 nicePrint(a)
+print(f"Total Files: {count}")
+
 '''
 count=0
 for book in os.listdir(directory):
