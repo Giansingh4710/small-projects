@@ -84,10 +84,10 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
 
-def EnterUrl(link,path):
+def EnterUrl(link,path="C:\\users\\gians\\desktop\\test\\"):
     start=str(dt.now())
 
     if path[-1]!="\\":
@@ -110,13 +110,11 @@ def EnterUrl(link,path):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-#url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKeertan%2FBhai_Avtar_Singh_%28Delhi_wale%29"
 #path="C:\\users\\gians\\desktop\\test"
-url=input("Enter the gurmatveechar.com link: ")
-path=input("Enter the path: ")
-if path[-1]!="\\":
-            path+="\\"
-EnterUrl(url,path)
+#url=input("Enter the gurmatveechar.com link: ")
+
+url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
+EnterUrl(url)
 
 
     
