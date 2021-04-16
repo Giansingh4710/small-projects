@@ -110,11 +110,77 @@ def EnterUrl(link,path="C:\\users\\gians\\desktop\\test\\"):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-#path="C:\\users\\gians\\desktop\\test"
-#url=input("Enter the gurmatveechar.com link: ")
+def onlyLinks(url):
+    res=requests.get(url)
+    soup=bs(res.text, 'lxml')
+    khatas=soup.find_all("table",cellpadding=4)
+    khatas=khatas[4:-2]
+    folderWithLinks={}
+    for file in khatas:
+        try:
+            title=file.find("font",size="2",color="0069c6").text
+        except AttributeError:
+            print("No Good. But we caught it!!")#It got the ALL the text from the drop down menu and those don't have a 'color=0069c6' attribute
+            continue
+        newUrl="http://www.gurmatveechar.com/"+file.find("a").get("href")
+        if "mp3" in newUrl.lower():
+            global totalFiles
+            totalFiles+=1
+            folderWithLinks[title]=newUrl
+        else:
+            newFolderWithLinks=onlyLinks(newUrl)
+            folderWithLinks.update(newFolderWithLinks) 
+    return folderWithLinks
+
+def santJiKhataInOrder():
+    angs=re.compile(r"(Ang(-||\s)([0-9]{1,4})(\+[0-9]{1,4})?)")
+    url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
+    a=onlyLinks(url)
+    titles=list(a.keys())
+    links=list(a.values())
+    theAngs=[0]*1430
+    for i in range(len(titles)):
+        b=angs.search(titles[i])
+        ang=b.group(3) #the third group gives the ang
+        num=int(ang)-1
+        theAngs[num]=links[i]
+    default="http://sikhsoul.com/golden_khajana_files/mp3/Keertan/Bhai%20Mohinder%20Singh%20SDO/Saaee%20Naam%20Amol%20Keem%20N%20Koee%20Jaanadho%201.mp3"
+    for i in range(len(theAngs)):
+        if theAngs[i]==0:
+            down=default
+            name=f"Default{i+1}.mp3"
+        else:
+            down=theAngs[i]
+            name=f"Ang{i+1}.mp3"
+        #urllib.request.urlretrieve(down,f"D:\\SantGurbachanSinghJiLarrivarKhata\\{name}")
+        print(f"Downloaded {name}")
+
 
 url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
-EnterUrl(url)
+path=""
+#EnterUrl(url)#,path)
+
+santJiKhataInOrder()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
