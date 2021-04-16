@@ -27,7 +27,7 @@ def getAudios():
 def downloadBooks(linksofBooks):
     failCounter=0
     for i in linksofBooks:
-        os.mkdir(f"D:\\Books\\{linksofBooks[i]}")
+        os.mkdir(f"D:\\{linksofBooks[i]}")
         res=requests.get(i)
         soup=bs(res.text, 'lxml')
         theCointaner=soup.find("div",class_="krtn_listing")
@@ -41,7 +41,7 @@ def downloadBooks(linksofBooks):
             title=f"{counter}) {chapter.text}.mp3"
             title=title.replace(" ","_")
             try:
-                urllib.request.urlretrieve(mp3,f"D:\\Books\\{linksofBooks[i]}\\{title}")
+                urllib.request.urlretrieve(mp3,f"D:\\{linksofBooks[i]}\\{title}")
                 print(f"{title} - {mp3}")
             except:
                 failCounter+=1

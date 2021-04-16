@@ -17,8 +17,10 @@ def goThroughFiles(dir):
                 count+=1
                 audio=MP3(path)
                 timeInSeconds+=audio.info.length
+                print(path)
             except Exception as e:
                 print(f'{thing} failed : {e}')
+                continue
     return timeInSeconds,count                     
 
 
@@ -40,7 +42,7 @@ def nicePrint(seconds):
     print("So in total:", end=" ")
     print(f"{int(fullDays)} days, {int(fullHour)} hours, {int(fullminutes)} minutes, {int(timeleft)} seconds")
 
-directory = "D:\\2) Keertan"
+directory = "D:\\"
 #directory = "D:\\"
 os.chdir(directory)
 a,count=goThroughFiles(directory)
