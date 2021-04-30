@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from threading import *
 import imaplib,email,re
+import datetime
 
 options = webdriver.ChromeOptions()
 options.headless = True
@@ -133,6 +134,7 @@ class SmsHukam():
             final+=gurmukhi[i].text+"\n"
             final+=english[i].text+"\n"
             final+="\n"
+        final+="\n"+shabadLink
         return final
 
     def gurmukhiHukam(self):
@@ -152,12 +154,13 @@ class SmsHukam():
             final+=gurmukhi[i].text+"\n"
             final+=english[i].text+"\n"
             final+="\n"
+        final+="\n"+shabadLink
         return final
 
 
 
 
-class Reply(Thread):
+class Reply():
     def run(self):
         host="imap.gmail.com"
         user="giansingh131313@gmail.com"
@@ -202,29 +205,40 @@ class Reply(Thread):
 
 
 
+class IfTimeSendSms(Thread):
+    def run(self):
+        h=SmsHukam()
+        while True:
+            a=datetime.datetime.now()
+            nowTime=a.strftime("%I:%M %p")
+            if nowTime=="09:39 AM":
+                hukam=h.engHukam()
+                people=["6782670271@pm.sprint.com"]
+                #people=["6023802096@pm.sprint.com","8622827105@pm.sprint.com","2018731477@pm.sprint.com","6782670271@pm.sprint.com","6788628987@pm.sprint.com","6786430348@pm.sprint.com","6787990390@pm.sprint.com","7189155004@pm.sprint.com"]
+                for i in people:
+                    h.sendToPhone("Daily Hukam",hukam,i)
+            time.sleep(60)
 
 
 
 def sendMessages():
     h=SmsHukam()
-    hukamnama=h.gurmukhiRand()
+    hukamnama=h.gurmukhiHukam()
     people=["6023802096@pm.sprint.com","8622827105@pm.sprint.com","2018731477@pm.sprint.com","6782670271@pm.sprint.com","6788628987@pm.sprint.com","6786430348@pm.sprint.com","6787990390@pm.sprint.com","7189155004@pm.sprint.com"]
     for i in people:
         h.sendToPhone("Hukam",hukamnama,i)
 #sendMessages()
-h=SmsHukam()
+#h=SmsHukam()
 #hukamnama=h.gurmukhiRand()
-#h.sendToPhone("Random",hukamnama,"6782670271@pm.sprint.com")
+#h.sendToPhone("Hukamnama",hukamnama,"6782670271@pm.sprint.com")
+
 if __name__=="__main__":
+    send=IfTimeSendSms()
+    send.start()
     while True:
         r=Reply()
-        r.start()
-        h=SmsHukam()
-        rand=h.engRandShabad()
-        h.sendToPhone("Hukam",rand,"6782670271@pm.sprint.com ")
-        #sendMessages(hukamnama)
+        r.run()
         time.sleep(20)
-
 
 
 
