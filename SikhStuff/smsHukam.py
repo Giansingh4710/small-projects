@@ -213,77 +213,32 @@ def sendMessages():
         h.sendToPhone("Hukam",hukamnama,i)
 #sendMessages()
 h=SmsHukam()
-hukamnama=h.gurmukhiRand()
-h.sendToPhone("Random",hukamnama,"6782670271@pm.sprint.com")
+#hukamnama=h.gurmukhiRand()
+#h.sendToPhone("Random",hukamnama,"6782670271@pm.sprint.com")
+if __name__=="__main__":
+    while True:
+        r=Reply()
+        r.start()
+        h=SmsHukam()
+        rand=h.engRandShabad()
+        h.sendToPhone("Hukam",rand,"6782670271@pm.sprint.com ")
+        #sendMessages(hukamnama)
+        time.sleep(20)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 '''
-while True:
-    r=Reply()
-    r.start()
-    h=SmsHukam()
-    rand=h.engRandShabad()
-    h.sendToPhone("Hukam",rand,"6782670271@pm.sprint.com ")
-    #sendMessages(hukamnama)
-    time.sleep(20)
-'''
-
-
-
-
-def gurmukhiRand():
-    url="https://gurbaninow.com/shabad/random"
-    br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-    br.get(url)
-    time.sleep(1)
-    content=br.page_source.encode('utf-8').strip()
-    shabadLink=br.current_url
-
-    soup=bs(content,"lxml")
-    conta=soup.find("div",id="shabad")
-    gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
-    english=conta.findAll("div",class_="english")
-    final=""
-    for i in range(len(gurmukhi)):
-        final+=gurmukhi[i].text+"\n"
-        final+=english[i].text+"\n"
-        final+="\n"
-    h=SmsHukam()
-    h.sendToPhone("Random Gurmukhi Shabad",final,"6782670271@pm.sprint.com")
-
-def gurmukhiHukam():
-    url="https://gurbaninow.com/hukamnama"
-    br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-    br.get(url)
-    time.sleep(1)
-    content=br.page_source.encode('utf-8').strip()
-    shabadLink=br.current_url
-
-    soup=bs(content,"lxml")
-    conta=soup.find("div",id="shabad")
-    gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
-    english=conta.findAll("div",class_="english")
-    final=""
-    for i in range(len(gurmukhi)):
-        final+=gurmukhi[i].text+"\n"
-        final+=english[i].text+"\n"
-        final+="\n"
-    print(final)
-    h=SmsHukam()
-    h.sendToPhone("Gurmukhi Hukam",final,"6782670271@pm.sprint.com")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def getGianiSukhaJiHukamAudio():
     original="https://www.sikhnet.com/gurbani/artist/14335/audio?page="
     khataLinks=[original+str(i) for i in range(17)]
@@ -308,7 +263,7 @@ def getGianiSukhaJiHukamAudio():
                 continue
     return allLinks
 
-"""
+
 Carrier	      SMS gateway domain	         MMS gateway domain
 AT&T	         [insert 10-digit number]@txt.att.net	[insert 10-digit number]@mms.att.net
 Boost Mobile	[insert 10-digit number]@sms.myboostmobile.com	[insert 10-digit number]@myboostmobile.com
@@ -323,4 +278,4 @@ Tracfone	[depends on underlying carrier]	[insert 10-digit number]@mmst5.tracfone
 U.S. Cellular	[insert 10-digit number]@email.uscc.net	[insert 10-digit number]@mms.uscc.net
 Verizon	[insert 10-digit number]@vtext.com	[insert 10-digit number]@vzwpix.com
 Virgin Mobile	[insert 10-digit number]@vmobl.com	[insert 10-digit number]@vmpix.com
-"""
+'''
