@@ -3,34 +3,45 @@ from email.message import EmailMessage
 import time,requests,re
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
-from threading import *
+from threading import Thread
 import imaplib,email,re
 import datetime
+import random
+from selenium.webdriver.chrome.options import Options
+chrome_options = Options()
+chrome_options.headless = True
 
-options = webdriver.ChromeOptions()
-options.headless = True
+#from keepAlive import KeepAlive
+#chrome_options.add_argument('--no-sandbox')
+#chrome_options.add_argument('--disable-dev-shm-usage')
+
 
 class SmsHukam():
+    def  __init__(self):
+        self.br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=chrome_options)
+
     def sendToPhone(self,subject,body,to):
         msg=EmailMessage()
-        msg.set_content(body)
-        msg['subject']=subject
-        msg["to"]=to
-        
+
         user='giansingh131313@gmail.com'
-        msg["from"]=user
         password='jkodhyxiypnsdifl'
+
+        msg["From"]=user
+        msg['Subject']=subject
+        msg["To"]=to
+        msg.set_content(body)
+        
 
         server=smtplib.SMTP('smtp.gmail.com',587)
         server.starttls()
         server.login(user,password)
-        server.send_message(msg)
+        server.send_message(msg,mail_options='SMTPUTF8')
         server.quit()
 
     def getHukamAudio(self,theId):
         url="https://www.sikhnet.com/gurbani/shabadid/"+theId
         res=requests.get(url)
-        soup=bs(res.text,"lxml")
+        soup=bs(res.text,"html.parser")
         cont=soup.find("table",class_="views-table")
         cont=cont.find("tbody")
         rows=cont.findAll("tr")
@@ -47,25 +58,23 @@ class SmsHukam():
 
 
     def engHukam(self):
-        url="https://www.sikhitothemax.org/hukamnama"
-        br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-        br.get(url)
+        url="https://www.sikhitothemax.org/hukamnama"        
+        self.br.get(url)
         time.sleep(1)
-        content=br.page_source.encode('utf-8').strip()
-        soup=bs(content,"lxml")
-        shabadLink=br.current_url
+        content=self.br.page_source.encode('utf-8').strip()
+        soup=bs(content,"html.parser")
+        shabadLink=self.br.current_url
 
         newUrl=soup.find("a",class_="hukamnama-right-link")["href"]
         Shabadid=newUrl[11:]
 
         newUrl="https://www.sikhitothemax.org"+newUrl
-        br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-        br.get(newUrl)
-        time.sleep(1)
-        content=br.page_source.encode('utf-8').strip()
-        soup=bs(content,"lxml")
         
-        #shabadHeader=soup.find(class_="metadata-shabad")
+        self.br.get(newUrl)
+        time.sleep(1)
+        content=self.br.page_source.encode('utf-8').strip()
+        soup=bs(content,"html.parser")
+        
         shabadHeader=soup.find(class_="meta")
         header=shabadHeader.findAll("h4")[1].text
 
@@ -90,12 +99,12 @@ class SmsHukam():
 
     def engRandShabad(self):
         url="https://www.sikhitothemax.org/shabad?random"
-        br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-        br.get(url)
+        
+        self.br.get(url)
         time.sleep(1)
-        content=br.page_source.encode('utf-8').strip()
-        soup=bs(content,"lxml")
-        shabadLink=br.current_url
+        content=self.br.page_source.encode('utf-8').strip()
+        soup=bs(content,"html.parser")
+        shabadLink=self.br.current_url
 
         shabadHeader=soup.find(class_="meta")
         header=shabadHeader.findAll("h4")[1].text
@@ -119,49 +128,47 @@ class SmsHukam():
 
     def gurmukhiRand(self):
         url="https://gurbaninow.com/shabad/random"
-        br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-        br.get(url)
+        
+        self.br.get(url)
         time.sleep(1)
-        content=br.page_source.encode('utf-8').strip()
-        shabadLink=br.current_url
+        content=self.br.page_source.encode('utf-8').strip()
+        shabadLink=self.br.current_url
 
-        soup=bs(content,"lxml")
+        soup=bs(content,"html.parser")
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
         english=conta.findAll("div",class_="english")
         final=""
         for i in range(len(gurmukhi)):
-            final+=gurmukhi[i].text+"\n"
-            final+=english[i].text+"\n"
+            final+=str(gurmukhi[i].text)+"\n"
+            final+=str(english[i].text)+"\n"
             final+="\n"
-        final+="\n"+shabadLink
+        final+="\n"+shabadLink+""
         return final
 
     def gurmukhiHukam(self):
         url="https://gurbaninow.com/hukamnama"
-        br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-        br.get(url)
+        
+        self.br.get(url)
         time.sleep(1)
-        content=br.page_source.encode('utf-8').strip()
-        shabadLink=br.current_url
+        content=self.br.page_source.encode('utf-8').strip()
+        shabadLink=self.br.current_url
 
-        soup=bs(content,"lxml")
+        soup=bs(content,"html.parser")
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
         english=conta.findAll("div",class_="english")
         final=""
         for i in range(len(gurmukhi)):
-            final+=gurmukhi[i].text+"\n"
-            final+=english[i].text+"\n"
+            final+=str(gurmukhi[i].text)+"\n"
+            final+=str(english[i].text)+"\n"
             final+="\n"
         final+="\n"+shabadLink
         return final
 
 
-
-
 class Reply():
-    def run(self):
+    def run(self,engHukam,gurmukhiHukam,engRand,gurmukhiRand):
         host="imap.gmail.com"
         user="giansingh131313@gmail.com"
         password='jkodhyxiypnsdifl'
@@ -174,34 +181,47 @@ class Reply():
         for num in searchData[0].split():
             _, data=mail.fetch(num,"(RFC822)")
             _,b=data[0]
-            emailMessage=email.message_from_bytes(b)
-            whoSent=emailMessage["From"]
-            theNumber=whoSent.split("@")[0]
-            a=re.search("[0-9]{10}",theNumber)
-            if a==None:
+            emailMessage = email.message_from_bytes(b)
+            whoSent = emailMessage["From"]
+
+            theNumber = whoSent.split("@")[0]
+            carrier=whoSent.split("@")[1]
+
+            a = re.search("[0-9]{10}", theNumber)
+            if a == None:
                 continue
             for part in emailMessage.walk():
-                if part.get_content_type()=="text/plain" or part.get_content_type()=="text/html":
-                    body=part.get_payload(decode=True)
-                    sentFromPhone=body.decode()
-                    phone=theNumber+"@pm.sprint.com"
+                if part.get_content_type() == "text/plain" or part.get_content_type() == "text/html":
+                    body = part.get_payload(decode=True)
+                    sentFromPhone = body.decode()
+                    sentFromPhone = sentFromPhone.lower()
 
-                    h=SmsHukam()
-                    if "rand" in sentFromPhone.lower() or "new" in sentFromPhone.lower():
-                        newRandomShabad=h.gurmukhiRand()
-                        h.sendToPhone("Random Shabad",newRandomShabad,phone)
+                    mms=self.getCarrier(carrier)
+                    phone = theNumber + mms
+                    theShabad = f"Please enter valid value for a shabad.\n \"{sentFromPhone}\" is not a valid"
 
-                    elif "hukam" in sentFromPhone.lower():
-                        hukamnama=h.gurmukhiHukam()
-                        h.sendToPhone("Hukamnam",hukamnama,theNumber+phone)
+                    if "random english" in sentFromPhone.lower() or "1" in sentFromPhone.lower():
+                        ind=random.randint(0,99)
+                        theShabad=engRand[ind]
+                    elif "english hukam" in sentFromPhone.lower() or "2" in sentFromPhone.lower():
+                        theShabad=engHukam
+                    elif "rand" in sentFromPhone.lower() or "new" in sentFromPhone.lower() or "3" in sentFromPhone.lower():
+                        ind=random.randint(0,99)
+                        theShabad=gurmukhiRand[ind]
+                    elif "hukam" in sentFromPhone.lower() or "4" in sentFromPhone.lower():
+                        theShabad=gurmukhiHukam
+                    elif "options" in sentFromPhone.lower() or "5" in sentFromPhone.lower():
+                        theShabad = "1. random english (get a randome shabad only in english)\n2. English Hukam(get the Darbar sahib Hukamnam only in english. This also has audio attachments)\n3. random (get random shabad with Gurmukhi)\n4. Hukam(get Darbar Sahib Hukamnama with Gurmukhi)\n5. See Options again\n(Type the option you want or the corresponding number!!)"
+                    sendToPhone("ShabadGuru",theShabad,phone)
+                    print("sent")
+    def getCarrier(self,car):
+        opts={'txt.att.net': '@mms.att.net', 'sms.myboostmobile.com': '@myboostmobile.com', 'mms.cricketwireless.net': '@mms.cricketwireless.net', 'msg.fi.google.com': '@msg.fi.google.com', 'messaging.sprintpcs.com': '@pm.sprint.com', 'vtext.com': '@vzwpix.com', 'tmomail.net': '@tmomail.net', 'message.ting.com': '@message.ting.com', 'email.uscc.net': '@mms.uscc.net', 'vmobl.com': '@vmpix.com', 'mms.att.net': '@mms.att.net', 'myboostmobile.com': '@myboostmobile.com', 'pm.sprint.com': '@pm.sprint.com', 'vzwpix.com': '@vzwpix.com', 'mms.uscc.net': '@mms.uscc.net', 'vmpix.com': '@vmpix.com'}
+        return opts[car]
+    
 
-                    elif "english hukam" in sentFromPhone.lower():
-                        hukamnama=h.engHukam()
-                        h.sendToPhone("English Hukam",hukamnama,phone)
 
-                    elif "random english" in sentFromPhone.lower():
-                        hukamnama=h.engRandShabad()
-                        h.sendToPhone("English Hukam",hukamnama,phone)
+
+
 
 
 
@@ -211,35 +231,75 @@ class IfTimeSendSms(Thread):
         while True:
             a=datetime.datetime.now()
             nowTime=a.strftime("%I:%M %p")
-            if nowTime=="09:39 AM":
+            if nowTime=="09:00 AM" or nowTime=="07:00 PM":
                 hukam=h.engHukam()
-                people=["6782670271@pm.sprint.com"]
-                #people=["6023802096@pm.sprint.com","8622827105@pm.sprint.com","2018731477@pm.sprint.com","6782670271@pm.sprint.com","6788628987@pm.sprint.com","6786430348@pm.sprint.com","6787990390@pm.sprint.com","7189155004@pm.sprint.com"]
+                people=["6023802096@pm.sprint.com","8622827105@pm.sprint.com","2018731477@pm.sprint.com","6782670271@pm.sprint.com","6788628987@pm.sprint.com","6786430348@pm.sprint.com","6787990390@pm.sprint.com","7189155004@pm.sprint.com"]
                 for i in people:
-                    h.sendToPhone("Daily Hukam",hukam,i)
+                    sendToPhone("Daily Hukam",hukam,i)
             time.sleep(60)
 
+class shabadEveryHour(Thread):
+    def run(self):
+        h=SmsHukam()
+        while True:
+            shabad=h.gurmukhiRand()
+            sendToPhone("Every Hour",shabad,"6782670271@pm.sprint.com")
+            time.sleep(60*60)
 
 
-def sendMessages():
-    h=SmsHukam()
-    hukamnama=h.gurmukhiHukam()
-    people=["6023802096@pm.sprint.com","8622827105@pm.sprint.com","2018731477@pm.sprint.com","6782670271@pm.sprint.com","6788628987@pm.sprint.com","6786430348@pm.sprint.com","6787990390@pm.sprint.com","7189155004@pm.sprint.com"]
-    for i in people:
-        h.sendToPhone("Hukam",hukamnama,i)
-#sendMessages()
-#h=SmsHukam()
-#hukamnama=h.gurmukhiRand()
-#h.sendToPhone("Hukamnama",hukamnama,"6782670271@pm.sprint.com")
+class prefillScrape():
+    def run(self):
+        h=SmsHukam()
+        engHukam=h.engHukam()
+        gurmukhiHukam=h.gurmukhiHukam()
+        engRand=[]
+        gurmukhiRand=[]
+        for i in range(100):
+            print(f"Done with {i+1}")
+            gurmukhiRand.append(h.gurmukhiRand())
+            engRand.append(h.engRandShabad())
+        return engHukam,gurmukhiHukam,engRand,gurmukhiRand
 
+
+def sendToPhone(subject,body,to):
+    msg=EmailMessage()
+
+    user='giansingh131313@gmail.com'
+    password='jkodhyxiypnsdifl'
+
+    msg["From"]=user
+    msg['Subject']=subject
+    msg["To"]=to
+    msg.set_content(body)
+    
+
+    server=smtplib.SMTP('smtp.gmail.com',587)
+    server.starttls()
+    server.login(user,password)
+    server.send_message(msg,mail_options='SMTPUTF8')
+    server.quit()
 if __name__=="__main__":
-    send=IfTimeSendSms()
-    send.start()
     while True:
-        r=Reply()
-        r.run()
-        time.sleep(20)
+        #KeepAlive()
 
+        sendToEveryOne=IfTimeSendSms()
+        toMe=shabadEveryHour()
+
+        sendToEveryOne.start()  #thread 1
+        toMe.start() #thread 2
+
+        p=prefillScrape()
+        engHukam,gurmukhiHukam,engRand,gurmukhiRand=p.run() 
+
+        r=Reply()
+        while True:
+            r.run(engHukam,gurmukhiHukam,engRand,gurmukhiRand)  #main thread
+            time.sleep(5)
+            a=datetime.datetime.now()
+            nowTime=a.strftime("%I:%M %p")
+            if nowTime=="12:30 AM":
+                break
+            
 
 
 
@@ -260,7 +320,7 @@ def getGianiSukhaJiHukamAudio():
     ang=re.compile("ang-([0-9]{1,4})")
     for khataLink in khataLinks:
         res=requests.get(khataLink)
-        soup=bs(res.text,"lxml")
+        soup=bs(res.text,"html.parser")
         cont=soup.find("table",class_="views-table")
         cont=cont.find("tbody")
         rows=cont.findAll("tr")
