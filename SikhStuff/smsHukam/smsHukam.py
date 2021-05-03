@@ -1,47 +1,20 @@
-import smtplib
-from email.message import EmailMessage
-import time,requests,re
-from bs4 import BeautifulSoup as bs
+import time,requests
 from selenium import webdriver
-from threading import Thread
-import imaplib,email,re
-import datetime
-import random
 from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.headless = True
-
-#from keepAlive import KeepAlive
+from bs4 import BeautifulSoup as bs
 #chrome_options.add_argument('--no-sandbox')
 #chrome_options.add_argument('--disable-dev-shm-usage')
-
 
 class SmsHukam():
     def  __init__(self):
         self.br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=chrome_options)
-
-    def sendToPhone(self,subject,body,to):
-        msg=EmailMessage()
-
-        user='giansingh131313@gmail.com'
-        password='jkodhyxiypnsdifl'
-
-        msg["From"]=user
-        msg['Subject']=subject
-        msg["To"]=to
-        msg.set_content(body)
         
-
-        server=smtplib.SMTP('smtp.gmail.com',587)
-        server.starttls()
-        server.login(user,password)
-        server.send_message(msg,mail_options='SMTPUTF8')
-        server.quit()
-
     def getHukamAudio(self,theId):
         url="https://www.sikhnet.com/gurbani/shabadid/"+theId
         res=requests.get(url)
-        soup=bs(res.text,"html.parser")
+        soup=bs(res.text,"lxml")
         cont=soup.find("table",class_="views-table")
         cont=cont.find("tbody")
         rows=cont.findAll("tr")
@@ -62,7 +35,7 @@ class SmsHukam():
         self.br.get(url)
         time.sleep(1)
         content=self.br.page_source.encode('utf-8').strip()
-        soup=bs(content,"html.parser")
+        soup=bs(content,"lxml")
         shabadLink=self.br.current_url
 
         newUrl=soup.find("a",class_="hukamnama-right-link")["href"]
@@ -73,11 +46,10 @@ class SmsHukam():
         self.br.get(newUrl)
         time.sleep(1)
         content=self.br.page_source.encode('utf-8').strip()
-        soup=bs(content,"html.parser")
+        soup=bs(content,"lxml")
         
         shabadHeader=soup.find(class_="meta")
         header=shabadHeader.findAll("h4")[1].text
-
         audios,mp3s=self.getHukamAudio(Shabadid)
 
         shabad=soup.find(class_="mixed-view-baani")
@@ -103,7 +75,7 @@ class SmsHukam():
         self.br.get(url)
         time.sleep(1)
         content=self.br.page_source.encode('utf-8').strip()
-        soup=bs(content,"html.parser")
+        soup=bs(content,"lxml")
         shabadLink=self.br.current_url
 
         shabadHeader=soup.find(class_="meta")
@@ -134,7 +106,7 @@ class SmsHukam():
         content=self.br.page_source.encode('utf-8').strip()
         shabadLink=self.br.current_url
 
-        soup=bs(content,"html.parser")
+        soup=bs(content,"lxml")
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
         english=conta.findAll("div",class_="english")
@@ -150,11 +122,11 @@ class SmsHukam():
         url="https://gurbaninow.com/hukamnama"
         
         self.br.get(url)
-        time.sleep(1)
+        time.sleep(3)
         content=self.br.page_source.encode('utf-8').strip()
         shabadLink=self.br.current_url
 
-        soup=bs(content,"html.parser")
+        soup=bs(content,"lxml")
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
         english=conta.findAll("div",class_="english")
@@ -165,191 +137,3 @@ class SmsHukam():
             final+="\n"
         final+="\n"+shabadLink
         return final
-
-
-class Reply():
-    def run(self,engHukam,gurmukhiHukam,engRand,gurmukhiRand):
-        host="imap.gmail.com"
-        user="giansingh131313@gmail.com"
-        password='jkodhyxiypnsdifl'
-
-        mail=imaplib.IMAP4_SSL(host)
-        mail.login(user,password)
-        mail.select("inbox")
-
-        _, searchData=mail.search(None,"UNSEEN")
-        for num in searchData[0].split():
-            _, data=mail.fetch(num,"(RFC822)")
-            _,b=data[0]
-            emailMessage = email.message_from_bytes(b)
-            whoSent = emailMessage["From"]
-
-            theNumber = whoSent.split("@")[0]
-            carrier=whoSent.split("@")[1]
-
-            a = re.search("[0-9]{10}", theNumber)
-            if a == None:
-                continue
-            for part in emailMessage.walk():
-                if part.get_content_type() == "text/plain" or part.get_content_type() == "text/html":
-                    body = part.get_payload(decode=True)
-                    sentFromPhone = body.decode()
-                    sentFromPhone = sentFromPhone.lower()
-
-                    mms=self.getCarrier(carrier)
-                    phone = theNumber + mms
-                    theShabad = f"Please enter valid value for a shabad.\n \"{sentFromPhone}\" is not a valid"
-
-                    if "random english" in sentFromPhone.lower() or "1" in sentFromPhone.lower():
-                        ind=random.randint(0,99)
-                        theShabad=engRand[ind]
-                    elif "english hukam" in sentFromPhone.lower() or "2" in sentFromPhone.lower():
-                        theShabad=engHukam
-                    elif "rand" in sentFromPhone.lower() or "new" in sentFromPhone.lower() or "3" in sentFromPhone.lower():
-                        ind=random.randint(0,99)
-                        theShabad=gurmukhiRand[ind]
-                    elif "hukam" in sentFromPhone.lower() or "4" in sentFromPhone.lower():
-                        theShabad=gurmukhiHukam
-                    elif "options" in sentFromPhone.lower() or "5" in sentFromPhone.lower():
-                        theShabad = "1. random english (get a randome shabad only in english)\n2. English Hukam(get the Darbar sahib Hukamnam only in english. This also has audio attachments)\n3. random (get random shabad with Gurmukhi)\n4. Hukam(get Darbar Sahib Hukamnama with Gurmukhi)\n5. See Options again\n(Type the option you want or the corresponding number!!)"
-                    sendToPhone("ShabadGuru",theShabad,phone)
-                    print("sent")
-    def getCarrier(self,car):
-        opts={'txt.att.net': '@mms.att.net', 'sms.myboostmobile.com': '@myboostmobile.com', 'mms.cricketwireless.net': '@mms.cricketwireless.net', 'msg.fi.google.com': '@msg.fi.google.com', 'messaging.sprintpcs.com': '@pm.sprint.com', 'vtext.com': '@vzwpix.com', 'tmomail.net': '@tmomail.net', 'message.ting.com': '@message.ting.com', 'email.uscc.net': '@mms.uscc.net', 'vmobl.com': '@vmpix.com', 'mms.att.net': '@mms.att.net', 'myboostmobile.com': '@myboostmobile.com', 'pm.sprint.com': '@pm.sprint.com', 'vzwpix.com': '@vzwpix.com', 'mms.uscc.net': '@mms.uscc.net', 'vmpix.com': '@vmpix.com'}
-        return opts[car]
-    
-
-
-
-
-
-
-
-class IfTimeSendSms(Thread):
-    def run(self):
-        h=SmsHukam()
-        while True:
-            a=datetime.datetime.now()
-            nowTime=a.strftime("%I:%M %p")
-            if nowTime=="09:00 AM" or nowTime=="07:00 PM":
-                hukam=h.engHukam()
-                people=["6023802096@pm.sprint.com","8622827105@pm.sprint.com","2018731477@pm.sprint.com","6782670271@pm.sprint.com","6788628987@pm.sprint.com","6786430348@pm.sprint.com","6787990390@pm.sprint.com","7189155004@pm.sprint.com"]
-                for i in people:
-                    sendToPhone("Daily Hukam",hukam,i)
-            time.sleep(60)
-
-class shabadEveryHour(Thread):
-    def run(self):
-        h=SmsHukam()
-        while True:
-            shabad=h.gurmukhiRand()
-            sendToPhone("Every Hour",shabad,"6782670271@pm.sprint.com")
-            time.sleep(60*60)
-
-
-class prefillScrape():
-    def run(self):
-        h=SmsHukam()
-        engHukam=h.engHukam()
-        gurmukhiHukam=h.gurmukhiHukam()
-        engRand=[]
-        gurmukhiRand=[]
-        for i in range(100):
-            print(f"Done with {i+1}")
-            gurmukhiRand.append(h.gurmukhiRand())
-            engRand.append(h.engRandShabad())
-        return engHukam,gurmukhiHukam,engRand,gurmukhiRand
-
-
-def sendToPhone(subject,body,to):
-    msg=EmailMessage()
-
-    user='giansingh131313@gmail.com'
-    password='jkodhyxiypnsdifl'
-
-    msg["From"]=user
-    msg['Subject']=subject
-    msg["To"]=to
-    msg.set_content(body)
-    
-
-    server=smtplib.SMTP('smtp.gmail.com',587)
-    server.starttls()
-    server.login(user,password)
-    server.send_message(msg,mail_options='SMTPUTF8')
-    server.quit()
-if __name__=="__main__":
-    while True:
-        #KeepAlive()
-
-        sendToEveryOne=IfTimeSendSms()
-        toMe=shabadEveryHour()
-
-        sendToEveryOne.start()  #thread 1
-        toMe.start() #thread 2
-
-        p=prefillScrape()
-        engHukam,gurmukhiHukam,engRand,gurmukhiRand=p.run() 
-
-        r=Reply()
-        while True:
-            r.run(engHukam,gurmukhiHukam,engRand,gurmukhiRand)  #main thread
-            time.sleep(5)
-            a=datetime.datetime.now()
-            nowTime=a.strftime("%I:%M %p")
-            if nowTime=="12:30 AM":
-                break
-            
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-def getGianiSukhaJiHukamAudio():
-    original="https://www.sikhnet.com/gurbani/artist/14335/audio?page="
-    khataLinks=[original+str(i) for i in range(17)]
-    allLinks={}
-    ang=re.compile("ang-([0-9]{1,4})")
-    for khataLink in khataLinks:
-        res=requests.get(khataLink)
-        soup=bs(res.text,"html.parser")
-        cont=soup.find("table",class_="views-table")
-        cont=cont.find("tbody")
-        rows=cont.findAll("tr")
-        for khata in rows:
-            each=khata.find("td",class_="views-field-title")
-            link="https://www.sikhnet.com/"+each.find("a")["href"]
-            try:
-                theAng=ang.findall(link)[0]
-                if theAng not in allLinks:
-                    allLinks[theAng]=[link]
-                else:
-                    allLinks[theAng].append(link)
-            except Exception:
-                continue
-    return allLinks
-
-
-Carrier	      SMS gateway domain	         MMS gateway domain
-AT&T	         [insert 10-digit number]@txt.att.net	[insert 10-digit number]@mms.att.net
-Boost Mobile	[insert 10-digit number]@sms.myboostmobile.com	[insert 10-digit number]@myboostmobile.com
-Cricket Wireless	[insert 10-digit number]@mms.cricketwireless.net	[insert 10-digit number]@mms.cricketwireless.net
-Google Project Fi	[insert 10-digit number]@msg.fi.google.com	[insert 10-digit number]@msg.fi.google.com
-Republic Wireless	[insert 10-digital number]@text.republicwireless.com	
-Sprint	[insert 10-digit number]@messaging.sprintpcs.com	[insert 10-digit number]@pm.sprint.com
-Straight Talk	[insert 10-digital number]@vtext.com	[insert 10-digit number]@mypixmessages.com
-T-Mobile	[insert 10-digit number]@tmomail.net	[insert 10-digit number]@tmomail.net
-Ting	[insert 10-digit number]@message.ting.com	
-Tracfone	[depends on underlying carrier]	[insert 10-digit number]@mmst5.tracfone.com
-U.S. Cellular	[insert 10-digit number]@email.uscc.net	[insert 10-digit number]@mms.uscc.net
-Verizon	[insert 10-digit number]@vtext.com	[insert 10-digit number]@vzwpix.com
-Virgin Mobile	[insert 10-digit number]@vmobl.com	[insert 10-digit number]@vmpix.com
-'''
