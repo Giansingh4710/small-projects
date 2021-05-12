@@ -38,5 +38,6 @@ while True:
         time.sleep(5)
         a=datetime.datetime.now()
         nowTime=a.strftime("%I:%M %p")
-        if nowTime=="12:30 AM":
+        print(nowTime)
+        if nowTime=="11:00 AM": #replit sever is 4 hours ahead est, so 11am is 7am est
             break

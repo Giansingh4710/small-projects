@@ -72,11 +72,10 @@ def getShabads(keertanis):
     return keertanTracks 
 
 
-def download(keertanis):
+def download(keertanis,path):
     print("Now downloading")
     for keertani in keertanis:
         counter=0
-        path="D:\\2) Keertan\\"
         path=path+keertani
         os.mkdir(path)
         for track in keertanis[keertani][::-1]: # the [::-1] means the list is reversed. I want the old tracks to be downloaded first
@@ -90,9 +89,10 @@ def download(keertanis):
             except Exception:
                 print(f"Couldn't download: {title}")
 
-keertanis=["Bhai giaan", "bibi sant kaur amritsar"]
+keertanis=["Bhai jaswant"]
 a=getKeertanis(keertanis)
-download(getShabads(a))
+path="C:\\Users\\gians\\Desktop\\test\\"
+download(getShabads(a),path)
 
 
 

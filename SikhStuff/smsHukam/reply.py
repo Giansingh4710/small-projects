@@ -31,28 +31,27 @@ class Reply():
                     body = part.get_payload(decode=True)
                     sentFromPhone = body.decode()
                     sentFromPhone = sentFromPhone.lower()
-
                     mms=self.getCarrier(carrier)
                     phone = theNumber + mms
                     print(phone)
                     theShabad = f"Please enter valid value for a shabad.\n \"{sentFromPhone}\" is not a valid. Press 7 for options."
                     title="Not Valid"
-                    if "random english" in sentFromPhone.lower() or "1" in sentFromPhone.lower():
+                    if "random english" in sentFromPhone.lower() or "1"==sentFromPhone.strip():
                         title="Random Shabad(Only English)"
                         ind=random.randint(0,9)
                         theShabad=engRand[ind]
-                    elif "english hukam" in sentFromPhone.lower() or "2" in sentFromPhone.lower():
+                    elif "english hukam" in sentFromPhone.lower() or "2"==sentFromPhone.strip():
                         title="Hukamnama from Darbar Sahib(Only English)"
                         theShabad=engHukam
-                    elif "rand" in sentFromPhone.lower() or "new" in sentFromPhone.lower() or "3" in sentFromPhone.lower():
+                    elif "rand" in sentFromPhone.lower() or "3"==sentFromPhone.strip():
                         title="Random Shabad(With Gurmukhi)"
                         ind=random.randint(0,9)
                         theShabad=gurmukhiRand[ind]
-                    elif "hukam" in sentFromPhone.lower() or "4" in sentFromPhone.lower():
+                    elif "hukam" in sentFromPhone.lower() or "4"==sentFromPhone.strip():
                         title="Hukamnama fromDarbar Sahib(With Gurmukhi)"
                         theShabad=gurmukhiHukam
 
-                    elif "add to daily hukam" in sentFromPhone or "5" in sentFromPhone:
+                    elif "add to daily hukam" in sentFromPhone or "5"==sentFromPhone.strip():
                         title="added to daily hukamnama"
                         if phone not in timeBasedSending.IfTimeSendSms.people:
                             theShabad="You have been added to the daily hukamnama list."
@@ -60,7 +59,7 @@ class Reply():
                         else:
                             theShabad="You are already in the Daily hukamnam list"
 
-                    elif "remove from daily hukam" in sentFromPhone or "6" in sentFromPhone:
+                    elif "remove from daily hukam" in sentFromPhone or "6"==sentFromPhone.strip():
                         title="removed from daily hukamnama"
                         theShabad="You have been removed to the daily hukamnama list."
                         try:
@@ -68,7 +67,7 @@ class Reply():
                         except ValueError:
                             theShabad="You are not in the list"
                         
-                    elif "options" in sentFromPhone.lower() or "7" in sentFromPhone.lower():
+                    elif "options" in sentFromPhone.lower() or "7"==sentFromPhone.strip():
                         title="Options"
                         theShabad = "1. random english (get a randome shabad only in english)\n2. English Hukam(get the Darbar sahib Hukamnam only in english. This also has audio attachments)\n3. random (get random shabad with Gurmukhi)\n4. Hukam(get Darbar Sahib Hukamnama with Gurmukhi)\n5. Get added to daily Hukamnama list. (you will recive the daily hukamnama at 7 am EST)\n6. Remove from daily Hukamnama list\n7. See Options again\n(Type the option you want or the corresponding number!!)"
                     elif "$alleng" in sentFromPhone:
@@ -82,3 +81,4 @@ class Reply():
     def getCarrier(self,car):
         opts={'txt.att.net': '@mms.att.net', 'sms.myboostmobile.com': '@myboostmobile.com', 'mms.cricketwireless.net': '@mms.cricketwireless.net', 'msg.fi.google.com': '@msg.fi.google.com', 'messaging.sprintpcs.com': '@pm.sprint.com', 'vtext.com': '@vzwpix.com', 'tmomail.net': '@tmomail.net', 'message.ting.com': '@message.ting.com', 'email.uscc.net': '@mms.uscc.net', 'vmobl.com': '@vmpix.com', 'mms.att.net': '@mms.att.net', 'myboostmobile.com': '@myboostmobile.com', 'pm.sprint.com': '@pm.sprint.com', 'vzwpix.com': '@vzwpix.com', 'mms.uscc.net': '@mms.uscc.net', 'vmpix.com': '@vmpix.com'}
         return opts[car]
+

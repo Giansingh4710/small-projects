@@ -8,8 +8,16 @@ def goldenKhajana(link):
     soup=bs(res.text,"lxml")
     td=soup.find_all("td",valign="top")
     atags=[i.find("a") for i in td]
-    links=["http://sikhsoul.com"+i["href"] for i in atags]
-    return links
+    links=[]
+    names=[]
+    for i in atags:
+        title="http://sikhsoul.com"+i["href"]
+        if title not in links:
+            links.append("http://sikhsoul.com"+i["href"])
+        if i.text not in names:
+            names.append(i.text)
+    names=names[1:]        
+    return names,links
 
 def download(links,path):
     if path[-1]!="\\":
@@ -32,8 +40,10 @@ def download(links,path):
 
 
 
-links=goldenKhajana("http://sikhsoul.com/golden_khajana/index.php?q=f&f=%2FKeertan%2FBhai+Mohinder+Singh+SDO")
-path="D:\\2) Keertan\\SDO ji"
+names,links=goldenKhajana("http://sikhsoul.com/golden_khajana/index.php?q=f&f=%2FKeertan%2FBhai+Mohinder+Singh+SDO")
+path="D:\\SDOJi"
 download(links,path)
+
+
 
 

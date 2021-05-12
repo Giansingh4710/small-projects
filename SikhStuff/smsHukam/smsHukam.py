@@ -10,11 +10,12 @@ from bs4 import BeautifulSoup as bs
 class SmsHukam():
     def  __init__(self):
         self.br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=chrome_options)
-        
+        self.parser="lxml"
+
     def getHukamAudio(self,theId):
         url="https://www.sikhnet.com/gurbani/shabadid/"+theId
         res=requests.get(url)
-        soup=bs(res.text,"lxml")
+        soup=bs(res.text,self.parser)
         cont=soup.find("table",class_="views-table")
         cont=cont.find("tbody")
         rows=cont.findAll("tr")
@@ -35,7 +36,7 @@ class SmsHukam():
         self.br.get(url)
         time.sleep(1)
         content=self.br.page_source.encode('utf-8').strip()
-        soup=bs(content,"lxml")
+        soup=bs(content,self.parser)
         shabadLink=self.br.current_url
 
         newUrl=soup.find("a",class_="hukamnama-right-link")["href"]
@@ -46,27 +47,32 @@ class SmsHukam():
         self.br.get(newUrl)
         time.sleep(1)
         content=self.br.page_source.encode('utf-8').strip()
-        soup=bs(content,"lxml")
+        soup=bs(content,self.parser)
         
         shabadHeader=soup.find(class_="meta")
         header=shabadHeader.findAll("h4")[1].text
-        audios,mp3s=self.getHukamAudio(Shabadid)
+
 
         shabad=soup.find(class_="mixed-view-baani")
         lst=shabad.find_all(class_="mixed-view-baani-translation-english")
+        
+        
         shabadStr=""
         for i in lst:
             shabadStr+=i.text+"\n"
-
-
-        final=header+"\n"+shabadStr+"\n"+shabadLink+"\n"+"Audios to listen to the Hukam: "+"\n"
-        final+="     Links:\n"
-        for i in audios:
-            final+="          "+i+"\n"
-        final+="     MP3 Files:\n"
-        for i in mp3s:
-            final+="          "+i+"\n"
-
+        final=header+"\n"+shabadStr+"\n"+shabadLink+"\n"
+        
+        try:
+            audios,mp3s=self.getHukamAudio(Shabadid)
+            final+="Audios to listen to the Hukam: "+"\n"
+            final+="     Links:\n"
+            for i in audios:
+                final+="          "+i+"\n"
+            final+="     MP3 Files:\n"
+            for i in mp3s:
+                final+="          "+i+"\n"
+        except Exception as e:
+            print("No audio for this hukamnama")
         return final
 
     def engRandShabad(self):
@@ -75,7 +81,7 @@ class SmsHukam():
         self.br.get(url)
         time.sleep(1)
         content=self.br.page_source.encode('utf-8').strip()
-        soup=bs(content,"lxml")
+        soup=bs(content,self.parser)
         shabadLink=self.br.current_url
 
         shabadHeader=soup.find(class_="meta")
@@ -106,16 +112,20 @@ class SmsHukam():
         content=self.br.page_source.encode('utf-8').strip()
         shabadLink=self.br.current_url
 
-        soup=bs(content,"lxml")
+        soup=bs(content,self.parser)
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
         english=conta.findAll("div",class_="english")
         final=""
         for i in range(len(gurmukhi)):
-            final+=str(gurmukhi[i].text)+"\n"
+            final+=str(gurmukhi[i].text).replace(" ", "")+"\n"
             final+=str(english[i].text)+"\n"
             final+="\n"
         final+="\n"+shabadLink+""
+        while "https://gurbaninow.com/shabad/random" in final:
+            print("Random didn't get generated")
+            final=self.gurmukhiRand()
+            print("Generated!!")            
         return final
 
     def gurmukhiHukam(self):
@@ -126,7 +136,7 @@ class SmsHukam():
         content=self.br.page_source.encode('utf-8').strip()
         shabadLink=self.br.current_url
 
-        soup=bs(content,"lxml")
+        soup=bs(content,self.parser)
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
         english=conta.findAll("div",class_="english")
@@ -137,3 +147,4 @@ class SmsHukam():
             final+="\n"
         final+="\n"+shabadLink
         return final
+
