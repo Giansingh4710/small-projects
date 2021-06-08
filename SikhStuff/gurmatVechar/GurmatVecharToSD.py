@@ -132,7 +132,7 @@ def onlyLinks(url):
             folderWithLinks.update(newFolderWithLinks) 
     return folderWithLinks
 
-def santJiKhataInOrder():
+def santJiKhataInOrder(path):
     angs=re.compile(r"(Ang(-||\s)([0-9]{1,4})(\+[0-9]{1,4})?)")
     url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
     a=onlyLinks(url)
@@ -144,7 +144,7 @@ def santJiKhataInOrder():
         ang=b.group(3) #the third group gives the ang
         num=int(ang)-1
         theAngs[num]=links[i]
-    default="http://sikhsoul.com/golden_khajana_files/mp3/Keertan/Bhai%20Mohinder%20Singh%20SDO/Saaee%20Naam%20Amol%20Keem%20N%20Koee%20Jaanadho%201.mp3"
+    default="http://sikhsoul.com/audio_files/mp3/Bani/Kirtan%20Sohila/Bhai%20Tarlochan%20Singh%20Ragi%20-%20Kirtan%20Sohaila.mp3"
     for i in range(len(theAngs)):
         if theAngs[i]==0:
             down=default
@@ -152,15 +152,15 @@ def santJiKhataInOrder():
         else:
             down=theAngs[i]
             name=f"Ang{i+1}.mp3"
-        #urllib.request.urlretrieve(down,f"D:\\SantGurbachanSinghJiLarrivarKhata\\{name}")
+        urllib.request.urlretrieve(down,f"{path}\\{name}")
         print(f"Downloaded {name}")
 
 
 url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
-path=""
+path="D:\\SantGianiGurbachanSinghJiSGGSJiKhataInOrder"
 #EnterUrl(url)#,path)
 
-santJiKhataInOrder()
+santJiKhataInOrder(path)
 
 
 

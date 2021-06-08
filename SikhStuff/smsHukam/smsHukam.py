@@ -90,7 +90,7 @@ class SmsHukam():
         angNum=angNum.find("a").text
         angNum="Ang"+angNum.split("Ang ")[1]
         santJi=self.santJiKhata[angNum]
-        santJi="\n\nKhata of Ang By Sant Giani Gurbachan Singh Ji Bhindran Vale:\n"+santJi
+        santJi="\n\nKhata of Ang By Sant Giani Gurbachan Singh Ji Bhindran Vale:\n"+str(santJi)
 
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
@@ -123,7 +123,7 @@ class SmsHukam():
         angNum=angNum.find("a").text
         angNum="Ang"+angNum.split("Ang ")[1]
         santJi=self.santJiKhata[angNum]
-        santJi="\n\nKhata of Ang By Sant Giani Gurbachan Singh Ji Bhindran Vale:\n"+santJi
+        santJi="\n\nKhata of Ang By Sant Giani Gurbachan Singh Ji Bhindran Vale:\n"+str(santJi)
 
         conta=soup.find("div",id="shabad")
         gurmukhi=conta.findAll("div",class_="gurmukhi unicode normal")
@@ -153,7 +153,10 @@ class SmsHukam():
                 continue
             newUrl="http://www.gurmatveechar.com/"+file.find("a").get("href")
             if "mp3" in newUrl.lower():
-                folderWithLinks[title]=newUrl
+                if title not in folderWithLinks:
+                    folderWithLinks[title]=[newUrl]
+                else:
+                    folderWithLinks[title].append(newUrl)
             else:
                 newFolderWithLinks=self.onlyLinks(newUrl)
                 folderWithLinks.update(newFolderWithLinks) 
@@ -182,9 +185,7 @@ class SmsHukam():
                 name=f"Ang{i+1}"
             d[name]=down
         return d
+
 a=SmsHukam()
 
-#for i in range(10): print(a.gurmukhiRand())
-print(a.gurmukhiHukam())
-
-
+print(a.gurmukhiRand())

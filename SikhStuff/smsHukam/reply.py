@@ -4,7 +4,7 @@ import timeBasedSending
 
 
 class Reply():
-	def run(self, gurmukhiHukam, gurmukhiRand):
+	def run(self, gurmukhiHukam, gurmukhiRand,santJiKhata):
 		host = "imap.gmail.com"
 		user = "giansingh131313@gmail.com"
 		password = 'jkodhyxiypnsdifl'
@@ -36,19 +36,26 @@ class Reply():
 					mms = self.getCarrier(carrier)
 					phone = theNumber + mms
 					print(phone)
-					theShabad = f"Please enter valid value for a shabad. \"{sentFromPhone}\" is not a valid. Press 7 for options."
+					theShabad = f"Please enter valid value for a shabad. \"{sentFromPhone}\" is not a valid. Press 5 for options."
 					title = "Not Valid"
-					if "rand" in sentFromPhone.lower(
-					) or "1" in sentFromPhone.strip():
+					if "ang" in sentFromPhone:
+						title="Sant Giani Gurbachan Singh Ji Khata"
+						try:
+							theAng=sentFromPhone.replace(" ","").strip().split("ang")[1]
+							link=santJiKhata["Ang"+theAng]
+							theShabad=f"{theAng}: {link}"
+						except Exception:
+							theShabad="Please enter a valid ang number in the correct format.(exp: Ang232)"
+
+					elif "1" in sentFromPhone.strip():
 						title = "Random Shabad(With Gurmukhi)"
 						ind = random.randint(0, 9)
 						theShabad = gurmukhiRand[ind]
-					elif "hukam" in sentFromPhone.lower(
-					) or "2" in sentFromPhone.strip():
+					elif "2" in sentFromPhone.strip():
 						title = "Hukamnama fromDarbar Sahib(With Gurmukhi)"
 						theShabad = gurmukhiHukam
 
-					elif "add to daily hukam" in sentFromPhone or "3" in sentFromPhone.strip(
+					elif "3" in sentFromPhone.strip(
 					):
 						title = "added to daily hukamnama"
 						if phone not in timeBasedSending.IfTimeSendSms.people:
@@ -57,7 +64,7 @@ class Reply():
 						else:
 							theShabad = "You are already in the Daily hukamnam list"
 
-					elif "remove from daily hukam" in sentFromPhone or "4" in sentFromPhone.strip(
+					elif "4" in sentFromPhone.strip(
 					):
 						title = "removed from daily hukamnama"
 						theShabad = "You have been removed to the daily hukamnama list."
@@ -69,7 +76,7 @@ class Reply():
 					elif "options" in sentFromPhone.lower(
 					) or "5" == sentFromPhone.strip():
 						title = "Options"
-						theShabad = "1. random (get random shabad)\n2. Hukam(get Darbar Sahib Hukamnama)\n3. Get added to daily Hukamnama list. (you will recive the daily hukamnama at 10 am EST)\n4. Remove from daily Hukamnama list\n5. See Options again\n(Type the option you want or the corresponding number!!)"
+						theShabad = "1. random (get random shabad)\n2. Hukam(get Darbar Sahib Hukamnama)\n3. Get added to daily Hukamnama list. (you will recive the daily hukamnama at 10 am EST)\n4. Remove from daily Hukamnama list\n5. See Options again\n(Type the corresponding number of the option you want to select!!)\n\n\nAlso:\nYou cant type 'ang' followed by the ang number to get Khata of Sant Giani Gurbachan Singh ji of the ang(exp: Ang322)"
 					elif "$allgurmukhi" in sentFromPhone:
 						title = "shUUU"
 						theShabad = str(gurmukhiRand)
@@ -96,3 +103,9 @@ class Reply():
 		    'vmpix.com': '@vmpix.com'
 		}
 		return opts[car]
+
+a=Reply()
+from smsHukam import SmsHukam
+b=SmsHukam()
+
+a.run("BIB","Jones",b.santJiKhata)

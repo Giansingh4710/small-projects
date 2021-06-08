@@ -41,6 +41,8 @@ def download(links,path):
 
 
 names,links=goldenKhajana("http://sikhsoul.com/golden_khajana/index.php?q=f&f=%2FKeertan%2FBhai+Mohinder+Singh+SDO")
+import os
+os.mkdir("D:\\SDOJi")
 path="D:\\SDOJi"
 download(links,path)
 
