@@ -9,11 +9,15 @@ class ShabadEveryHour(Thread):
 	def run(self):
 		#h=smsHukam.SmsHukam()
 		#shabad=h.gurmukhiRand()
+		count=0
 		while True:
+			count+=1
 			shabad = "ਵਾਹਿਗੁਰੂ"
 			sendToPhone("Remember", shabad, "6782670271@pm.sprint.com")
-			print(f"{shabad} reminder sent")
-			time.sleep(3600)
+			a = datetime.datetime.now()
+			nowTime = a.strftime("%I:%M %p")
+			print(f"{count}){shabad} reminder sent: {nowTime}")
+			time.sleep(3600*10)
 
 
 class IfTimeSendSms(Thread):
@@ -31,7 +35,7 @@ class IfTimeSendSms(Thread):
 		while True:
 			a = datetime.datetime.now()
 			nowTime = a.strftime("%I:%M %p")
-			if nowTime == "03:00 PM":
+			if nowTime == "02:00 PM":
 				hukam = h.gurmukhiHukam()
 				for i in IfTimeSendSms.people:
 					sendToPhone("Daily Hukam", hukam, i)

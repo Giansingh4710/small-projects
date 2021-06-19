@@ -9,13 +9,13 @@ import datetime
 
 def preFillScrape():
 	h = smsHukam.SmsHukam()
-	engHukam = h.engHukam()
+	#engHukam = h.engHukam()
 	gurmukhiHukam = h.gurmukhiHukam()
 	gurmukhiRand = []
 	for i in range(10):
 		print(f"Done with {i+1}")
 		gurmukhiRand.append(h.gurmukhiRand())
-	return engHukam, gurmukhiHukam, gurmukhiRand
+	return gurmukhiHukam, gurmukhiRand, h.santJiKhata
 
 
 while True:
@@ -27,10 +27,10 @@ while True:
 	sendToEveryOne.start()  #thread 1
 	toMe.start()  #thread 2
 
-	engHukam, gurmukhiHukam, gurmukhiRand = preFillScrape()
+	gurmukhiHukam, gurmukhiRand, santJiKhata = preFillScrape()
 	r = reply.Reply()
 	while True:
-		r.run(gurmukhiHukam, gurmukhiRand)  #main thread
+		r.run(gurmukhiHukam, gurmukhiRand, santJiKhata)  #main thread
 		time.sleep(5)
 		a = datetime.datetime.now()
 		nowTime = a.strftime("%I:%M %p")
