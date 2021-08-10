@@ -17,7 +17,6 @@ def getKeertanis(keertanis):
         optCont=br.find_element_by_css_selector("body > div.container > form > div > div > div > div.col-md-3.col-xs-12 > div > div.selectize-dropdown.single.selectpicker.select > div")
         opts=optCont.find_elements_by_class_name("option") #taking all the options from dropdown menu and put in list
         optLst=[i.get_attribute("data-value") for i in opts] #only the names are in this list as before there was other stuff in the list
-        print(optLst)
         for i in range(len(optLst)):
             print(f'{i+1}) {optLst[i]}')
         if len(optLst)==0:
@@ -40,6 +39,7 @@ def getKeertanis(keertanis):
                 dropDown.send_keys(theKeertani)
         br.find_element_by_css_selector("body > div.container > form > div > div > div > div.col-md-12.text-center.keer-top-but > input").click() #click search button
         peopleUrl[theKeertani]=br.current_url
+    print(peopleUrl)
     return peopleUrl
 
 #this will take in the dictionary generated from the getKeertanis func
@@ -72,26 +72,31 @@ def getShabads(keertanis):
     return keertanTracks 
 
 
-def download(keertanis,path):
+def download(keertanis,thePath):
     print("Now downloading")
     for keertani in keertanis:
         counter=0
-        path=path+keertani
+        path=thePath+keertani
         os.mkdir(path)
         for track in keertanis[keertani][::-1]: # the [::-1] means the list is reversed. I want the old tracks to be downloaded first
             counter+=1
+            print(track)
             b=track.split('/')
             title=b[-1][:-1]+"3"
+            print(b)
             title=f"{counter}) {title}"
             try:
                 urllib.request.urlretrieve(track,f"{path}\\{title}")
                 print(title)
             except Exception:
                 print(f"Couldn't download: {title}")
+            if counter==10: #bhai gagandeep singh ji wanted only 10 tracks of each keertani
+                break
 
-keertanis=["Bhai jaswant"]
+# keertanis=["Bibi Sant Kaur","bhai harsimran singh", "bibi harkiran kaur", "bhai gurbir singh","bibi baljinder kaur", "bhai jagjit singh", "bhai amolak singh","bhai harpreet singh toronto","bhai prabhjot singh delhi","bhai gurinder singh california","bhai davinderbir singh","bhai gursharan singh faridabad","bhai pritpal singh regina", "bhai dilveer singh"]
+keertanis=["gian","giaan"]
 a=getKeertanis(keertanis)
-path="C:\\Users\\gians\\Desktop\\test\\"
+path="D:\\"
 download(getShabads(a),path)
 
 
