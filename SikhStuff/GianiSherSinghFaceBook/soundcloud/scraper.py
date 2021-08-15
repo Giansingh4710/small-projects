@@ -1,11 +1,16 @@
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
+
 import time,os,requests
 # from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup as bs
 import urllib.request 
 
 options = webdriver.ChromeOptions()
-options.headless = True
+# options.headless = True
 
 def linksToPlayLists():
     br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
@@ -84,33 +89,30 @@ def downloadLinksInPlaylist(directory,obj):
 
 def downloadLink(dir,track):
     br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-    br.get("https://www.soundcloudmp3.org/converter")
-
+    theUrl="https://soundcloudtomp3.app"
+    br.get(theUrl)
     # time.sleep(5)
-    entry=br.find_element_by_css_selector("#conversionForm > div > input.form-control")
+    entry=br.find_element_by_css_selector("body > div.jumbotron > div > center > form > div > input")
     print(track[1])
     entry.send_keys(track[1])
-    button=br.find_element_by_css_selector("#conversionForm > div > span > button")
+    button=br.find_element_by_css_selector("#fd")
     button.click()
-    time.sleep(1)
-    print("After download click !!!!!")
-    atag=br.find_element_by_css_selector("#download-btn")
-    theDownloadLink=atag.get_attribute("href")
 
+    print("After download click !!!!!")
+    atag=br.find_elements_by_xpath('//*[@id="dlMP3"]')
+    theDownloadLink=atag[2].get_attribute("href")
     urllib.request.urlretrieve(theDownloadLink,f'{dir}{track[0]}.mp3')
     time.sleep(1)
     br.close()
 
 dir="C:\\Users\\gians\\Desktop\\test\\"
-lst=linksToPlayLists()
-d=linksInPlaylist(lst) # d returns a dict where keys are title of playist and the items are a list of tuples(size 2) when index 0 is title of track and index 1 is link of track
-print(d)
-downloadLinksInPlaylist(dir,d)
+# lst=linksToPlayLists()
+# d=linksInPlaylist(lst) # d returns a dict where keys are title of playist and the items are a list of tuples(size 2) when index 0 is title of track and index 1 is link of track
+# print(d)
+# downloadLinksInPlaylist(dir,d)
 # f=open("./soundcloud/obj.txt","w",encoding="utf-8")
 # f.write(str(d))
 # f.close()
-
-
 
 
 obj={
@@ -478,4 +480,5 @@ obj={
         ]
 }
 
-
+downloadLinksInPlaylist(dir,obj)
+# downloadLink(dir,("Katha test","https://soundcloud.com/gianishersinghjiambala/sri-guru-panth-prakash-part-1?in=gianishersinghjiambala/sets/sri-guru-panth-prakash-katha"))
