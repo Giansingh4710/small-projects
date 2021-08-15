@@ -1,18 +1,12 @@
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-
-import time,os,requests
-# from selenium.webdriver.common.keys import Keys
+import time,os
 from bs4 import BeautifulSoup as bs
 import urllib.request 
 
 options = webdriver.ChromeOptions()
 # options.headless = True
 
-def linksToPlayLists():
+def linksToPlayLists(): #gets all the links to the playlists in soundcloud
     br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
     url="https://soundcloud.com/gianishersinghjiambala/sets"
     br.get(url)
@@ -33,7 +27,7 @@ def linksToPlayLists():
     playlistLinks=[]
     f=open("./soundcloud/playlistLinks.txt","w")
     for playlist in allPlaylists:
-        atag=playlist.find("a",class_="soundTitle__title sc-link-dark sc-link-primary")
+        atag=playlist.find("a",class_="soundTitle__title sc-link-dark sc-link-secondary")
         theLinkWithTitle=(atag.text.strip(),"https://soundcloud.com"+atag["href"])
         playlistLinks.append(theLinkWithTitle)
         f.write(atag.text.strip()+" : "+"https://soundcloud.com"+atag["href"]+"\n")
@@ -41,7 +35,7 @@ def linksToPlayLists():
     br.close()
     return playlistLinks
 
-def linksInPlaylist(playlists):
+def linksInPlaylist(playlists): #gets all the individual katha links inside the playlists
     # f=open("./soundcloud/playlistLinks.txt","r")
     # playlists=f.readlines()
     # playlists=[i.split(" : ") for i in playlists]
@@ -53,7 +47,7 @@ def linksInPlaylist(playlists):
         d[title]=links
     return d
 
-def getLinksForPlaylist(link):
+def getLinksForPlaylist(link): #gets links for katha in a playlist. This func is used for the func above
     br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
     br.get(link)
     scroll=0
@@ -73,19 +67,14 @@ def getLinksForPlaylist(link):
 
 
 def downloadLinksInPlaylist(directory,obj):
-    good=0
-    noGood=0
     for playlist in obj:
         newPlace=f"{directory}{playlist}\\"
         os.mkdir(newPlace)
         for track in obj[playlist]:
             try:
                 downloadLink(newPlace,track)
-                good+=1
             except Exception:
                 print(f"No Download - {track}")
-                noGood+=1
-    return {"good":good,"noGood":noGood}
 
 def downloadLink(dir,track):
     br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
@@ -93,12 +82,11 @@ def downloadLink(dir,track):
     br.get(theUrl)
     # time.sleep(5)
     entry=br.find_element_by_css_selector("body > div.jumbotron > div > center > form > div > input")
-    print(track[1])
-    entry.send_keys(track[1])
+    entry.send_keys(track[1]) #track[1] is the soundcloud url link of katha
     button=br.find_element_by_css_selector("#fd")
     button.click()
 
-    print("After download click !!!!!")
+    print("After download clicked !!!!!")
     atag=br.find_elements_by_xpath('//*[@id="dlMP3"]')
     theDownloadLink=atag[2].get_attribute("href")
     urllib.request.urlretrieve(theDownloadLink,f'{dir}{track[0]}.mp3')
@@ -480,5 +468,7 @@ obj={
         ]
 }
 
+listOfPlaylists=linksToPlayLists()
+obj=linksInPlaylist(listOfPlaylists)
+
 downloadLinksInPlaylist(dir,obj)
-# downloadLink(dir,("Katha test","https://soundcloud.com/gianishersinghjiambala/sri-guru-panth-prakash-part-1?in=gianishersinghjiambala/sets/sri-guru-panth-prakash-katha"))
