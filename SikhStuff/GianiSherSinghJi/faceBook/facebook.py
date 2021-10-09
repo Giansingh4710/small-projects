@@ -36,7 +36,7 @@ def GoToFacebook():
     return videos
 
 videos=GoToFacebook()
-filee=open("C:\\Users\\gians\\Desktop\\CS\\pythons\\small-projects\\SikhStuff\\GianiSherSinghFaceBook\\theLinks.txt","w")
+filee=open("C:\\Users\\gians\\Desktop\\CS\\pythons\\small-projects\\SikhStuff\\GianiSherSinghJi\\faceBook\\theLinks.txt","w")
 for i in videos:
     filee.write(i+"\n")
 filee.close()

@@ -43,7 +43,7 @@ def getTime(vids):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-filee=open("C:\\Users\\gians\\Desktop\\CS\\pythons\\small-projects\\SikhStuff\\GianiSherSinghFaceBook\\theLinks.txt","r")
+filee=open("C:\\Users\\gians\\Desktop\\CS\\pythons\\small-projects\\SikhStuff\\GianiSherSinghJi\\faceBook\\theLinks.txt","r")
 read=filee.readlines()
 filee.close()
 videos=[i[:-1] for i in read]

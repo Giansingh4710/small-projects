@@ -6,9 +6,10 @@ import urllib.request
 options = webdriver.ChromeOptions()
 # options.headless = True
 
-def linksToPlayLists(): #gets all the links to the playlists in soundcloud
-    br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
-    url="https://soundcloud.com/gianishersinghjiambala/sets"
+# driverPath='C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe'
+driverPath='C:\\Users\\gians\\Desktop\\stuff\\chromedriver_win32\\chromedriver.exe'
+def linksToPlayLists(url): #gets all the links to the playlists in soundcloud
+    br =  webdriver.Chrome(driverPath,options=options)
     br.get(url)
     #time.sleep(4)
     scroll=0
@@ -25,7 +26,7 @@ def linksToPlayLists(): #gets all the links to the playlists in soundcloud
     allPlaylists=soup.find("div",class_="userMain__content")
     allPlaylists=allPlaylists.find_all("li",class_="soundList__item")
     playlistLinks=[]
-    f=open("./soundcloud/playlistLinks.txt","w")
+    f=open("./playlistLinks.txt","w")
     for playlist in allPlaylists:
         atag=playlist.find("a",class_="soundTitle__title sc-link-dark sc-link-secondary")
         theLinkWithTitle=(atag.text.strip(),"https://soundcloud.com"+atag["href"])
@@ -48,7 +49,7 @@ def linksInPlaylist(playlists): #gets all the individual katha links inside the 
     return d
 
 def getLinksForPlaylist(link): #gets links for katha in a playlist. This func is used for the func above
-    br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
+    br =  webdriver.Chrome(driverPath,options=options)
     br.get(link)
     scroll=0
     end=False
@@ -77,7 +78,7 @@ def downloadLinksInPlaylist(directory,obj):
                 print(f"No Download - {track}")
 
 def downloadLink(dir,track):
-    br =  webdriver.Chrome('C:\\Users\\gians\\Desktop\\stuff\\chromedriver.exe',options=options)
+    br =  webdriver.Chrome(driverPath,options=options)
     theUrl="https://soundcloudtomp3.app"
     br.get(theUrl)
     # time.sleep(5)
@@ -468,7 +469,8 @@ obj={
         ]
 }
 
-listOfPlaylists=linksToPlayLists()
+url="https://soundcloud.com/gianishersinghjiambala/sets"
+listOfPlaylists=linksToPlayLists(url)
 obj=linksInPlaylist(listOfPlaylists)
 
 downloadLinksInPlaylist(dir,obj)

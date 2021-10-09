@@ -42,7 +42,7 @@ def nicePrint(seconds):
     print("So in total:", end=" ")
     print(f"{int(fullDays)} days, {int(fullHour)} hours, {int(fullminutes)} minutes, {int(timeleft)} seconds")
 
-directory = "D:\\"
+directory = "C:\\Users\\gians\\Desktop\\test\\WhyGuru Course"
 #directory = "D:\\"
 os.chdir(directory)
 a,count=goThroughFiles(directory)
