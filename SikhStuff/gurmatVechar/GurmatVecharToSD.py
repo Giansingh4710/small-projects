@@ -84,10 +84,10 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            #urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
 
-def EnterUrl(link,path="C:\\users\\gians\\desktop\\test\\"):
+def EnterUrl(link,path):
     start=str(dt.now())
 
     if path[-1]!="\\":
@@ -110,29 +110,29 @@ def EnterUrl(link,path="C:\\users\\gians\\desktop\\test\\"):
     print(f"Minutes: {(endSeconds-startSeconds)/60}")
     print(f"Hours: {(endSeconds-startSeconds)/(60*60)}")
 
-def onlyLinks(url):
-    res=requests.get(url)
-    soup=bs(res.text, 'lxml')
-    khatas=soup.find_all("table",cellpadding=4)
-    khatas=khatas[4:-2]
-    folderWithLinks={}
-    for file in khatas:
-        try:
-            title=file.find("font",size="2",color="0069c6").text
-        except AttributeError:
-            print("No Good. But we caught it!!")#It got the ALL the text from the drop down menu and those don't have a 'color=0069c6' attribute
-            continue
-        newUrl="http://www.gurmatveechar.com/"+file.find("a").get("href")
-        if "mp3" in newUrl.lower():
-            global totalFiles
-            totalFiles+=1
-            folderWithLinks[title]=newUrl
-        else:
-            newFolderWithLinks=onlyLinks(newUrl)
-            folderWithLinks.update(newFolderWithLinks) 
-    return folderWithLinks
 
 def santJiKhataInOrder(path):
+    def onlyLinks(url):
+        res=requests.get(url)
+        soup=bs(res.text, 'lxml')
+        khatas=soup.find_all("table",cellpadding=4)
+        khatas=khatas[4:-2]
+        folderWithLinks={}
+        for file in khatas:
+            try:
+                title=file.find("font",size="2",color="0069c6").text
+            except AttributeError:
+                print("No Good. But we caught it!!")#It got the ALL the text from the drop down menu and those don't have a 'color=0069c6' attribute
+                continue
+            newUrl="http://www.gurmatveechar.com/"+file.find("a").get("href")
+            if "mp3" in newUrl.lower():
+                global totalFiles
+                totalFiles+=1
+                folderWithLinks[title]=newUrl
+            else:
+                newFolderWithLinks=onlyLinks(newUrl)
+                folderWithLinks.update(newFolderWithLinks) 
+        return folderWithLinks
     angs=re.compile(r"(Ang(-||\s)([0-9]{1,4})(\+[0-9]{1,4})?)")
     url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
     a=onlyLinks(url)
@@ -156,11 +156,15 @@ def santJiKhataInOrder(path):
         print(f"Downloaded {name}")
 
 
-url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
-path="D:\\SantGianiGurbachanSinghJiSGGSJiKhataInOrder"
-#EnterUrl(url)#,path)
+# url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
+url="" #enter the url Link in here like above
 
-santJiKhataInOrder(path)
+# path="C:\\users\\gians\\desktop\\test\\"
+path="" #enter the path of the directory of where you want the files to be downloaded like above
+
+
+EnterUrl(url,path)
+
 
 
 
