@@ -30,7 +30,8 @@ def getAllLinks(url,folder="main"):
             for td in length:
                 if "mb" in td.text.lower() or "kb" in td.text.lower():
                     theMB=td.text
-            title=f"{str(count).zfill(3)} ) {title}"+"???"+theMB #the last part contians the MBs of the file.
+            # title=f"{str(count).zfill(3)} ) {title}"+"???"+theMB #the last part contians the MBs of the file.
+            title=str(count).zfill(3)+" ) "+title+"???"+theMB
             folderWithLinks[folder].append(title)
             folderWithLinks[folder].append(newUrl)
         else:
@@ -157,13 +158,28 @@ def santJiKhataInOrder(path):
 
 
 # url="http://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha"
-url="" #enter the url Link in here like above
+urls=[
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FBaba_Mohan_Singh_%28Bhindran_wale%29",
 
-# path="C:\\users\\gians\\desktop\\test\\"
-path="" #enter the path of the directory of where you want the files to be downloaded like above
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FGiani_Kirpal_Singh_%28Boparai_wale%29%2FSri_Dasam_Granth_Katha",
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FGiani_Kirpal_Singh_%28Boparai_wale%29%2FKatha_Sri_Nanak_Parkash",
 
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSant_Giani_Inderjeet_Singh_%28Raqbe_wale%29%2FSahaskritee_Salok_Katha",
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FSant_Giani_Inderjeet_Singh_%28Raqbe_wale%29%2FSri_Gurpartap_Sooraj_Parkash_Katha",
 
-EnterUrl(url,path)
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FBhai_Gurdas_Dian_Varan",
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha",
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FSri_Krishan_Avtar_Katha",
+]
+
+urls=[
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FChandi_Di_Vaar",
+    "https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FSri_Krishan_Avtar_Katha"
+]
+
+path="D:/"
+for url in urls:
+    EnterUrl(url,path)
 
 
 
