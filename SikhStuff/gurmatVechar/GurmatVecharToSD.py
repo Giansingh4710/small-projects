@@ -57,8 +57,11 @@ def download(khatas,thePath):
             if type(khatas[khata][0])==dict: #made this call so that it doesen't have to search through EACH file when the first is not a dict
                 listOfDict=khatas[khata]
                 for dictt in listOfDict:
-                    if type(dictt)==dict:  #somtimes there are folders and files in a folder so this will check for that. If not a dict, the won't recurse
-                        download(dictt,folderPath)
+                    try:
+                        if type(dictt)==dict:  #somtimes there are folders and files in a folder so this will check for that. If not a dict, the won't recurse
+                            download(dictt,folderPath)
+                    except Exception as e:
+                        print("error: "+e)
                 continue #so the dict of dicts dosen't keep going down
         titles=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2==0]
         links=[khatas[khata][i] for i in range(len(khatas[khata])) if i%2!=0]
@@ -84,7 +87,7 @@ def download(khatas,thePath):
             for bad in noNo:
                 if bad in title:
                     title=title.replace(bad,"#")
-            urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
+            # urllib.request.urlretrieve(links[i],f'{folderPath}{title}')
             print(f'{title} - {links[i]}')
 
 def EnterUrl(link,path,folderNameToPutAllFiles="main"):
@@ -173,43 +176,15 @@ urls=[
 ]
 
 urls=[
-        ["https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FBhai_Gurdas_Dian_Varan","Sant_Gurbachan_Singh Bhai_Gurdas_Dian_Vara"],
-    ["https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FGuru_Granth_Sahib_Larivaar_Katha","Sant_Gurbachan_Singh Guru_Granth_Sahib_Larivaar_Katha"],
-    ["https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F01_Puratan_Katha%2FSant_Gurbachan_Singh_%28Bhindran_wale%29%2FSri_Krishan_Avtar_Katha","Sant_Gurbachan_Singh Sri_Krishan_Avtar_Katha"],
+   ["https://gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FBaba_Mohan_Singh_%28Bhindran_wale%29","Baba_Mohan_Singh"],
+]
+
+urls=[
+   ["https://gurmatveechar.com/audio.php?","All Gurmat Vechar test"],
 ]
 
 path="D:/"
+path="C:/Users/gians/Desktop/test"
+
 for url in urls:
     EnterUrl(url[0],path,url[1])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-        
-
-
-        
-
-
