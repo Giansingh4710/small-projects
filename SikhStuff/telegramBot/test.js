@@ -1,0 +1,32 @@
+const telegramBot = {
+  message: {
+    supergroup_chat_created: False,
+    channel_chat_created: False,
+    new_chat_photo: [],
+    caption_entities: [],
+    date: 1635629852,
+    entities: [{ type: "bot_command", offset: 0, length: 7 }],
+    delete_chat_photo: False,
+    group_chat_created: False,
+    chat: {
+      first_name: "Gian",
+      username: "Giansingh4710",
+      last_name: "Singh",
+      id: 895963987,
+      type: "private",
+    },
+    new_chat_members: [],
+    text: "/repeat vahegurur",
+    message_id: 659,
+    photo: [],
+    from: {
+      is_bot: False,
+      first_name: "Gian",
+      last_name: "Singh",
+      language_code: "en",
+      username: "Giansingh4710",
+      id: 895963987,
+    },
+  },
+  update_id: 608379804,
+};
