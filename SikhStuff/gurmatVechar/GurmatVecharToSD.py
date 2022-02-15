@@ -164,7 +164,7 @@ def santJiKhataInOrder(path):
 
 
 urls=[
-   ["https://www.gurmatveechar.com/audio.php?q=f&f=%2FKatha%2F02_Present_Day_Katha%2FBhai_Avtar_Singh_%28Badni_Kalan_wale%29%2FKatha_Sri_Guru_Granth_Sahib_Ji",
+   ["https://www.gurmatveechar.com/audio.php?q=f&f=%2FKeertan%2FAkali_Baba_Wadhbhag_Singh",
    "Giani Avtar Singh Ji(Bai Ji Badni Kalan)"],
 ]
 
