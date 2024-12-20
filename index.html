@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Portfolio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #e74c3c;
+        --background: #f8f9fa;
+        --card-bg: #ffffff;
+        --text: #2c3e50;
+        --text-light: #666;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        color: var(--text);
+        background: var(--background);
+      }
+
+      header {
+        background: linear-gradient(-45deg, #2c3e50, #3498db, #e74c3c, #2980b9);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        color: white;
+        text-align: center;
+        padding: 4rem 0;
+        position: relative;
+        overflow: hidden;
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(52, 152, 219, 0.2) 0%,
+          rgba(231, 76, 60, 0.2) 100%
+        );
+        z-index: 1;
+      }
+
+      header .container {
+        position: relative;
+        z-index: 2;
+      }
+
+      header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .projects {
+        padding: 3rem 0;
+      }
+
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
+      }
+
+      .project-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .project-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--secondary), var(--accent));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+
+      .project-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .project-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: var(--secondary);
+      }
+
+      .project-card h3 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+
+      .project-card p {
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
+      .project-card .technologies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .technology-tag {
+        background: rgba(52, 152, 219, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: var(--secondary);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .technology-tag::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: var(--secondary);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.6s ease,
+          height 0.6s ease;
+        z-index: -1;
+      }
+
+      .technology-tag:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .technology-tag:hover {
+        background: var(--secondary);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .project-item {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .project-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .project-item h4 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .code-link {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .code-link::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(135deg, var(--accent), var(--secondary));
+        transition: width 0.3s ease;
+        z-index: -1;
+      }
+
+      .code-link:hover::before {
+        width: 100%;
+      }
+
+      .code-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+
+      footer {
+        background: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 1rem 0;
+        margin-top: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .project-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .projects h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInUp 1s ease;
+      }
+
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-30px);
+        }
+        60% {
+          transform: translateY(-15px);
+        }
+      }
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .project-card {
+          transform: none !important;
+          transition: transform 0.3s ease;
+        }
+
+        .project-card:active {
+          transform: scale(0.98) !important;
+        }
+
+        header {
+          min-height: 40vh;
+          padding: 2rem 0;
+        }
+
+        .ripple {
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.4);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          pointer-events: none;
+        }
+
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+      }
+
+      /* Scroll progress indicator */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(to right, var(--secondary), var(--accent));
+        transform-origin: left;
+        transform: scaleX(0);
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scroll-progress"></div>
+    <header>
+      <div class="container">
+        <h1>Small Projects Portfolio</h1>
+        <p>
+          A collection of Python-based utilities, games, and Sikh-related tools
+        </p>
+      </div>
+    </header>
+
+    <main class="container projects">
+      <h2>Project Categories</h2>
+      <div class="project-grid">
+        <!-- Games -->
+        <div class="project-card">
+          <h3>Games</h3>
+          <div class="project-item">
+            <h4>Hangman</h4>
+            <p>
+              A classic Hangman game implementation with two versions and a word
+              list file. Test your word-guessing skills!
+            </p>
+            <div class="technologies">
+              <span class="technology-tag">Python</span>
+              <span class="technology-tag">File I/O</span>
+            </div>
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/Hangman"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+          <div class="project-item">
+            <h4>Tic Tac Toe</h4>
+            <p>
+              A command-line implementation of the classic Tic Tac Toe game.
+            </p>
+            <div class="technologies">
+              <span class="technology-tag">Python</span>
+            </div>
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/ticTactoe"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+        </div>
+
+        <!-- Password Tools -->
+        <div class="project-card">
+          <h3>Password Utilities</h3>
+          <p>A collection of password management tools:</p>
+          <ul>
+            <li>Password Generator</li>
+            <li>Password Setter</li>
+            <li>Password Retrieval Tool</li>
+          </ul>
+          <div class="technologies">
+            <span class="technology-tag">Python</span>
+            <span class="technology-tag">Security</span>
+          </div>
+          <a
+            href="https://github.com/Giansingh4710/small-projects/tree/master/PasswordStuff"
+            class="code-link"
+            >View Code</a
+          >
+        </div>
+
+        <!-- Giani Sher Singh Ji Tools -->
+        <div class="project-card">
+          <h3>Giani Sher Singh Ji Content</h3>
+          <div class="project-item">
+            <h4>Facebook Video Downloader</h4>
+            <p>Automated tool to download and archive Facebook videos.</p>
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/GianiSherSinghJi/faceBook"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+          <div class="project-item">
+            <h4>SoundCloud Scraper</h4>
+            <p>Tool for downloading playlists and content from SoundCloud.</p>
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/GianiSherSinghJi/soundcloud"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+          <div class="technologies">
+            <span class="technology-tag">Python</span>
+            <span class="technology-tag">Web Scraping</span>
+            <span class="technology-tag">JavaScript</span>
+          </div>
+        </div>
+
+        <!-- Gurmail Singh Ji Tools -->
+        <div class="project-card">
+          <h3>Gurmail Singh Ji Keetan</h3>
+          <p>Content management and download tools for Keetan recordings.</p>
+          <a
+            href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/GurmailSinghJiKeetan"
+            class="code-link"
+            >View Code</a
+          >
+          <div class="technologies">
+            <span class="technology-tag">Python</span>
+            <span class="technology-tag">Web Scraping</span>
+          </div>
+        </div>
+
+        <!-- AKJ Tools -->
+        <div class="project-card">
+          <h3>AKJ Utilities</h3>
+          <div class="project-item">
+            <h4>Keertan Track Tools</h4>
+            <ul>
+              <li>Keertan track downloader</li>
+              <li>File duration analyzer</li>
+              <li>Akhand Paath Facebook archiver</li>
+            </ul>
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/akj"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+          <div class="technologies">
+            <span class="technology-tag">Python</span>
+            <span class="technology-tag">File Processing</span>
+          </div>
+        </div>
+
+        <!-- Forums -->
+        <div class="project-card">
+          <h3>Forum Management Tools</h3>
+          <div class="project-item">
+            <h4>Multi-Platform Forum Tools</h4>
+            <ul>
+              <li>WordPress content scraper</li>
+              <li>Forum search utility with GUI</li>
+              <li>Article collection tools</li>
+            </ul>
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/fourms"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+          <div class="technologies">
+            <span class="technology-tag">Python</span>
+            <span class="technology-tag">GUI</span>
+            <span class="technology-tag">Web Scraping</span>
+          </div>
+        </div>
+
+        <!-- Gurmat Vechar -->
+        <div class="project-card">
+          <h3>Gurmat Vechar Tools</h3>
+          <p>
+            Content management system with GUI interface for Gurmat Vechar
+            resources.
+          </p>
+          <a
+            href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/gurmatVechar"
+            class="code-link"
+            >View Code</a
+          >
+          <div class="technologies">
+            <span class="technology-tag">Python</span>
+            <span class="technology-tag">GUI</span>
+          </div>
+        </div>
+
+        <!-- Messaging Tools -->
+        <div class="project-card">
+          <h3>Messaging Services</h3>
+          <div class="project-item">
+            <h4>SMS Hukam</h4>
+            <p>
+              Automated system for sending and managing SMS messages with
+              features like:
+            </p>
+            <ul>
+              <li>Time-based sending</li>
+              <li>Keep-alive functionality</li>
+              <li>Reply handling</li>
+            </ul>
+
+            <a
+              href="https://github.com/Giansingh4710/small-projects/tree/master/SikhStuff/smsHukam"
+              class="code-link"
+              >View Code</a
+            >
+          </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Project Portfolio. All rights reserved.</p>
+      </div>
+    </footer>
+    <script>
+      // Enhanced animations
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add floating animation to header
+        const header = document.querySelector("header h1");
+        header.style.animation = "float 3s ease-in-out infinite";
+
+        // Add intersection observer for scroll animations
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          },
+        );
+
+        // Observe all project cards
+        const cards = document.querySelectorAll(".project-card");
+
+        cards.forEach((card, index) => {
+          // Set initial state
+          card.style.opacity = "0";
+          card.style.transform = "translateY(50px)";
+          card.style.transition = "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+          card.style.transitionDelay = `${index * 100}ms`;
+
+          // Observe card
+          observer.observe(card);
+
+          // Add hover animation
+          card.addEventListener("mouseenter", () => {
+            card.style.transform = "translateY(-10px) scale(1.02)";
+            card.style.boxShadow = "0 20px 40px rgba(0,0,0,0.12)";
+          });
+
+          card.addEventListener("mouseleave", () => {
+            card.style.transform = "translateY(0) scale(1)";
+            card.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)";
+          });
+        });
+
+        // Add touch ripple effect for mobile
+        document
+          .querySelectorAll(".code-link, .technology-tag")
+          .forEach((element) => {
+            element.addEventListener("touchstart", function (e) {
+              const rect = element.getBoundingClientRect();
+              const ripple = document.createElement("div");
+              ripple.className = "ripple";
+              ripple.style.left = `${e.touches[0].clientX - rect.left}px`;
+              ripple.style.top = `${e.touches[0].clientY - rect.top}px`;
+              element.appendChild(ripple);
+
+              setTimeout(() => {
+                ripple.remove();
+              }, 1000);
+            });
+          });
+        const cards = document.querySelectorAll(".project-card");
+
+        cards.forEach((card, index) => {
+          // Set initial state
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+
+          // Trigger animation after a delay
+          setTimeout(() => {
+            card.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, 100 * index);
+        });
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute("href")).scrollIntoView({
+              behavior: "smooth",
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
